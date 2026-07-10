@@ -8,7 +8,7 @@ const pdfParse = require("pdf-parse");
 const OpenAI = require("openai");
 const mongoose = require("mongoose");
 const connectDB = require("./db");
-const Agreement = require("./models/Agreement");
+const Agreement = require("./models/agreement");
 
 const app = express();
 
