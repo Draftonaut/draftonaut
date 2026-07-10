@@ -7,7 +7,7 @@ import logo from "../assets/logoblue.png";
 import { declarationTemplate } from "../templates/DeclarationTemplate";
 import { indemnityBondTemplate } from "../templates/IndemnityBondTemplate";
 import { commonFormTemplate } from "../templates/CommonFormTemplate";
-import { affidavitTemplate } from "../templates/affidavittemplate";
+import { affidavitTemplate } from "../templates/Affidavittemplate";
 
 const SectionHeader = ({ number, title }) => (
   <div className="flex items-center mt-8 mb-4">
