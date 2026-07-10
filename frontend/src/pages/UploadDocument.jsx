@@ -65,7 +65,7 @@ function UploadDocument() {
       formData.append("document", file);
 
       const response = await axios.post(
-        "http://localhost:5000/upload",
+        "https://draftonaut.onrender.com/upload",
         formData,
         {
           headers: {

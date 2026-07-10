@@ -141,9 +141,12 @@ function GenerateAgreement() {
 
     try {
       // 3. Make the ACTUAL API call to your backend server
-      const response = await axios.post("http://localhost:5000/api/ai-clause", {
-        prompt: prefix + textToSend,
-      });
+      const response = await axios.post(
+        "https://draftonaut.onrender.com/api/ai-clause",
+        {
+          prompt: prefix + textToSend,
+        },
+      );
 
       // 4. Remove the "Thinking..." message and display the AI's response
       const botMsg = { sender: "bot", text: response.data.reply };
@@ -269,7 +272,7 @@ function GenerateAgreement() {
         ? `Flat ${agreementForm.property.flatNumber}`
         : "Untitled Agreement";
 
-      await axios.post("http://localhost:5000/api/save-draft", {
+      await axios.post("https://draftonaut.onrender.com/api/save-draft", {
         userId: user.uid,
         title,
         agreementForm,

@@ -202,7 +202,7 @@ function Dashboard() {
   const getDrafts = async (uid) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/drafts/${uid}`,
+        `https://draftonaut.onrender.com/api/drafts/${uid}`,
       );
       setDrafts(response.data.drafts);
     } catch (error) {
@@ -213,7 +213,9 @@ function Dashboard() {
   const deleteDraft = async (e, draftId) => {
     e.stopPropagation();
     try {
-      await axios.delete(`http://localhost:5000/api/drafts/${draftId}`);
+      await axios.delete(
+        `https://draftonaut.onrender.com/api/drafts/${draftId}`,
+      );
       setDrafts(drafts.filter((draft) => draft._id !== draftId));
     } catch (error) {
       console.log(error);

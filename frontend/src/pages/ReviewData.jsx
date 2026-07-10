@@ -16,7 +16,7 @@ function ReviewData() {
     try {
       setLoading(true);
       const response = await axios.post(
-        "http://localhost:5000/extract-history",
+        "https://draftonaut.onrender.com/extract-history",
         {
           pdfText,
         },
