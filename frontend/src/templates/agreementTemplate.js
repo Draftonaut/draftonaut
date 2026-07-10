@@ -1,0 +1,26 @@
+export const agreementTemplate = `
+AGREEMENT FOR SALE
+
+BETWEEN
+
+{{SELLERS}}
+
+AND
+
+{{PURCHASERS}}
+
+PROPERTY
+
+Flat No. {{FLAT_NUMBER}}
+
+Building Name: {{BUILDING_NAME}}
+
+OWNERSHIP HISTORY
+
+{{OWNERSHIP_HISTORY}}
+
+SALE CONSIDERATION
+
+{{SALE_AMOUNT}}
+
+`;
