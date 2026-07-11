@@ -244,7 +244,7 @@ function DocumentGenerator() {
       <img
         src={logo}
         alt="Logo"
-        className="fixed top-5 left-8 h-15 object-contain z-50 hidden lg:block"
+        className="fixed top-6 left-12 h-15 object-contain z-50 hidden lg:block"
       />
 
       <div className="absolute right-0 top-0 h-screen w-full lg:w-[55%] xl:w-[50%] flex flex-col items-center justify-start bg-white shadow-[-20px_0_40px_rgba(0,0,0,0.05)] overflow-y-auto">
@@ -283,7 +283,8 @@ function DocumentGenerator() {
           <div className="mb-6">
             <input
               type="file"
-              accept=".pdf, .png, .jpg, .jpeg"
+              // ADDED .doc and .docx below
+              accept=".pdf, .png, .jpg, .jpeg, .doc, .docx"
               onChange={handleFileUpload}
               className="hidden"
               id="ai-autofill-upload"

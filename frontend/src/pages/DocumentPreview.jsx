@@ -11,6 +11,9 @@ function DocumentPreview() {
   const [selectedDoc, setSelectedDoc] = useState(documents[0] || null);
   const [editorContent, setEditorContent] = useState("");
 
+  // State for Page Size (A4 vs Legal)
+  const [pageSize, setPageSize] = useState("a4");
+
   // State to control the right-hand hint slider on mobile/tablet
   const [isHintOpen, setIsHintOpen] = useState(false);
 
@@ -34,7 +37,7 @@ function DocumentPreview() {
       filename: `${selectedDoc.title || "document"}.pdf`,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      jsPDF: { unit: "in", format: pageSize, orientation: "portrait" },
     };
 
     html2pdf().set(options).from(element).save();
@@ -43,11 +46,51 @@ function DocumentPreview() {
   const handleDownloadDOCX = () => {
     if (!selectedDoc) return;
 
-    const header =
-      "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export Document</title></head><body>";
-    const footer = "</body></html>";
+    // Define correct dimensions for MS Word
+    const isA4 = pageSize === "a4";
+    const sizeStr = isA4 ? "8.27in 11.69in" : "8.5in 14.0in";
+
+    // Inject strict Microsoft Office XML and Print View settings
+    const header = `
+      <html xmlns:o="urn:schemas-microsoft-com:office:office"
+            xmlns:w="urn:schemas-microsoft-com:office:word"
+            xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta charset="utf-8">
+        <title>${selectedDoc.title || "Export Document"}</title>
+        <style>
+          @page WordSection1 {
+            size: ${sizeStr};
+            margin: 1.0in 1.0in 1.0in 1.0in;
+            mso-header-margin: 0.5in;
+            mso-footer-margin: 0.5in;
+            mso-paper-source: 0;
+          }
+          div.WordSection1 {
+            page: WordSection1;
+          }
+          body { 
+            font-family: 'Times New Roman', Times, serif; 
+            font-size: 12pt; 
+            line-height: 1.5; 
+            color: #000000; 
+          }
+          p {
+            margin-top: 0;
+            margin-bottom: 10pt;
+          }
+          table { width: 100%; border-collapse: collapse; }
+          td, th { border: 1px solid black; padding: 5px; }
+        </style>
+      </head>
+      <body>
+        <div class="WordSection1">
+    `;
+
+    const footer = "</div></body></html>";
     const sourceHTML = header + editorContent + footer;
 
+    // Use application/msword to ensure MS Word handles it
     const blob = new Blob(["\ufeff", sourceHTML], {
       type: "application/msword",
     });
@@ -80,7 +123,7 @@ function DocumentPreview() {
       {/* LEFT SIDEBAR (Documents List) */}
       <div className="w-full md:w-65 bg-white border-b md:border-b-0 md:border-r border-slate-200 p-4 md:p-6 flex flex-col shrink-0 z-10 shadow-sm md:shadow-none overflow-y-auto max-h-48 md:max-h-full">
         <div className="hidden md:block mb-8">
-          <img src={logo} alt="Logo" className="h-10 object-contain" />
+          <img src={logo} alt="Logo" className="h-15 object-contain" />
         </div>
 
         <h2 className="text-sm md:text-lg font-bold mb-3 md:mb-6 text-slate-400 uppercase tracking-wider">
@@ -121,14 +164,25 @@ function DocumentPreview() {
                 </h3>
               </div>
 
-              <div className="flex gap-2 w-full sm:w-auto">
-                {/* Desktop Toggle Hint Button (Hidden on lg screens where sidebar is permanent) */}
+              <div className="flex gap-2 w-full sm:w-auto items-center">
+                {/* Desktop Toggle Hint Button */}
                 <button
                   onClick={() => setIsHintOpen(true)}
                   className="hidden md:block lg:hidden px-4 py-2 bg-slate-100 text-slate-700 rounded hover:bg-slate-200 font-bold text-xs md:text-sm transition-colors border border-slate-300"
                 >
                   💡 Hints
                 </button>
+
+                {/* Page Size Toggle */}
+                <select
+                  value={pageSize}
+                  onChange={(e) => setPageSize(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-300 rounded text-sm font-bold text-slate-700 outline-none focus:border-[#0055ff] transition-colors"
+                >
+                  <option value="a4">A4 Size</option>
+                  <option value="legal">Legal Size</option>
+                </select>
+
                 <button
                   onClick={handleDownloadPDF}
                   className="flex-1 sm:flex-none px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 font-bold text-xs md:text-sm transition-colors shadow-sm"
@@ -144,17 +198,20 @@ function DocumentPreview() {
               </div>
             </div>
 
-            {/* A4 PAGE STYLED EDITOR */}
-            <div className="w-full bg-white shadow-2xl ring-1 ring-slate-900/5 sm:mx-auto">
+            {/* A4/LEGAL PAGE STYLED EDITOR */}
+            <div
+              className="w-full bg-white shadow-2xl ring-1 ring-slate-900/5 sm:mx-auto transition-all duration-300"
+              style={{ maxWidth: pageSize === "legal" ? "816px" : "794px" }}
+            >
               <Editor
                 key={selectedDoc?.title || "editor"}
                 apiKey="xxn6qkavv3x208h2dmjgvoqsu3jb31b114sqz4mk7uq49xag"
                 initialValue={selectedDoc?.html}
                 onEditorChange={(newValue) => setEditorContent(newValue)}
                 init={{
-                  license_key: "gpl", // <--- ADD THIS EXACT LINE HERE
-                  height: 900, // Taller to simulate a full page
-                  menubar: false, // Cleaner UI
+                  license_key: "gpl",
+                  height: pageSize === "legal" ? 1000 : 900,
+                  menubar: false,
                   statusbar: false,
                   plugins: [
                     "advlist",
@@ -180,7 +237,6 @@ function DocumentPreview() {
                     "bold italic underline | alignleft aligncenter " +
                     "alignright alignjustify | bullist numlist | " +
                     "table | removeformat",
-                  // Content style gives the internal editor the padding of a real document
                   content_style: `
                     body { 
                       font-family: 'Times New Roman', Times, serif; 
@@ -190,6 +246,8 @@ function DocumentPreview() {
                       color: #000;
                       background: #fff;
                     }
+                    table { width: 100%; border-collapse: collapse; }
+                    td, th { border: 1px solid black; padding: 5px; }
                     @media (max-width: 600px) {
                       body { padding: 20px; }
                     }
@@ -219,7 +277,6 @@ function DocumentPreview() {
       </div>
 
       {/* RIGHT SIDEBAR (Hint Slider) */}
-      {/* Background Overlay for mobile when slider is open */}
       {isHintOpen && (
         <div
           className="fixed inset-0 bg-slate-900/20 backdrop-blur-sm z-30 lg:hidden"
@@ -234,7 +291,6 @@ function DocumentPreview() {
         ${isHintOpen ? "translate-x-0" : "translate-x-full"}
       `}
       >
-        {/* Header of Slider */}
         <div className="p-5 border-b border-slate-100 flex justify-between items-center bg-blue-50/50">
           <div className="flex items-center gap-2 text-blue-700">
             <span className="text-xl">💡</span>
@@ -262,7 +318,6 @@ function DocumentPreview() {
           </button>
         </div>
 
-        {/* Content of Slider */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
           <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg">
             <h3 className="font-bold text-amber-800 text-sm mb-2">
@@ -297,7 +352,7 @@ function DocumentPreview() {
                 </div>
                 <p className="text-xs text-slate-600">
                   If text is cut off, ensure you haven't accidentally inserted a
-                  wide table. The document acts as a standard A4 page.
+                  wide table. The document acts as a standard page.
                 </p>
               </li>
               <li className="flex gap-3 items-start">
@@ -310,12 +365,6 @@ function DocumentPreview() {
                 </p>
               </li>
             </ul>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <span className="inline-block bg-slate-100 text-slate-400 text-[10px] font-bold tracking-[0.2em] uppercase px-3 py-1 rounded">
-              Auto-Save Enabled
-            </span>
           </div>
         </div>
       </div>

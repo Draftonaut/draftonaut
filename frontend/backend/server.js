@@ -5,6 +5,8 @@ const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
+const mammoth = require("mammoth"); // Added for DOC/DOCX
+const Tesseract = require("tesseract.js"); // Added for Image Text Extraction
 const OpenAI = require("openai");
 const mongoose = require("mongoose");
 const connectDB = require("./db");
@@ -81,7 +83,7 @@ app.get("/test-openai", async (req, res) => {
 });
 
 // =========================
-// PDF UPLOAD + EXTRACT TEXT
+// DOCUMENT UPLOAD + EXTRACT TEXT (Updated for Docs & Images)
 // =========================
 app.post("/upload", upload.single("document"), async (req, res) => {
   try {
@@ -91,16 +93,39 @@ app.post("/upload", upload.single("document"), async (req, res) => {
         .json({ success: false, message: "No file uploaded." });
     }
 
-    const dataBuffer = fs.readFileSync(req.file.path);
-    const pdfData = await pdfParse(dataBuffer);
+    const mimeType = req.file.mimetype;
+    const filePath = req.file.path;
+    let extractedText = "";
+
+    // Intelligently handle PDFs vs Docs vs Images
+    if (mimeType === "application/pdf") {
+      const dataBuffer = fs.readFileSync(filePath);
+      const pdfData = await pdfParse(dataBuffer);
+      extractedText = pdfData.text;
+    } else if (
+      mimeType.includes("wordprocessingml") ||
+      mimeType === "application/msword"
+    ) {
+      const docxData = await mammoth.extractRawText({ path: filePath });
+      extractedText = docxData.value;
+    } else if (mimeType.startsWith("image/")) {
+      const tesseractResult = await Tesseract.recognize(filePath, "eng");
+      extractedText = tesseractResult.data.text;
+    } else {
+      fs.unlinkSync(filePath);
+      return res.status(400).json({
+        success: false,
+        message: "Unsupported file type. Please upload PDF, DOCX, or Image.",
+      });
+    }
 
     // Delete the temporary file to keep the server clean
-    fs.unlinkSync(req.file.path);
+    fs.unlinkSync(filePath);
 
     res.json({
       success: true,
       fileName: req.file.originalname,
-      extractedText: pdfData.text,
+      extractedText: extractedText,
     });
   } catch (error) {
     console.log(error);
@@ -118,7 +143,7 @@ app.post("/upload", upload.single("document"), async (req, res) => {
 });
 
 // =========================
-// EXTRACT FORM DATA (AUTO-FILL)
+// EXTRACT FORM DATA (AUTO-FILL) (Updated for Docs)
 // =========================
 app.post("/api/extract", upload.single("document"), async (req, res) => {
   try {
@@ -132,7 +157,7 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
     const filePath = req.file.path;
     let extractionContent = [];
 
-    // Intelligently handle PDFs vs Images
+    // Intelligently handle PDFs vs Docs vs Images
     if (mimeType === "application/pdf") {
       const dataBuffer = fs.readFileSync(filePath);
       const pdfData = await pdfParse(dataBuffer);
@@ -140,6 +165,17 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
         {
           type: "text",
           text: `Extract the form data from this document text:\n\n${pdfData.text}`,
+        },
+      ];
+    } else if (
+      mimeType.includes("wordprocessingml") ||
+      mimeType === "application/msword"
+    ) {
+      const docxData = await mammoth.extractRawText({ path: filePath });
+      extractionContent = [
+        {
+          type: "text",
+          text: `Extract the form data from this document text:\n\n${docxData.value}`,
         },
       ];
     } else if (mimeType.startsWith("image/")) {
@@ -151,6 +187,7 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
         },
         {
           type: "image_url",
+          // Removed data prefix as GPT-4o Vision requires standard base64 URL format
           image_url: { url: `data:${mimeType};base64,${base64Image}` },
         },
       ];
@@ -158,7 +195,8 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
       fs.unlinkSync(filePath);
       return res.status(400).json({
         success: false,
-        message: "Unsupported file type. Please upload a PDF or Image.",
+        message:
+          "Unsupported file type. Please upload a PDF, DOC, DOCX, or Image.",
       });
     }
 

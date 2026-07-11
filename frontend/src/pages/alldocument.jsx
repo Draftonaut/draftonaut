@@ -54,11 +54,18 @@ function AllDocuments() {
         }}
       />
 
+      {/* DESKTOP LOGO - Top Left (Hidden on Mobile) */}
+      <img
+        src={logo}
+        alt="Logo"
+        className="fixed top-6 left-12 h-15 object-contain z-50 hidden lg:block"
+      />
+
       {/* RIGHT SIDE FORM CONTAINER */}
       <div className="absolute right-0 top-0 h-full w-full lg:w-1/2 z-10 flex flex-col bg-white/95 backdrop-blur-md shadow-2xl overflow-y-auto">
         {/* Inner Content Wrapper - Anchors to top on mobile, centers on desktop */}
         <div className="w-full min-h-full flex flex-col justify-start lg:justify-center pt-8 pb-12 px-6 sm:p-10 lg:p-16 max-w-2xl mx-auto lg:mx-0">
-          {/* MOBILE LOGO - Visible only on mobile/tablet, centered at the top */}
+          {/* MOBILE LOGO - Top Center (Hidden on Desktop) */}
           <div className="w-full flex justify-center lg:hidden mb-8">
             <img
               src={logo}

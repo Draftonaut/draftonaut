@@ -339,7 +339,7 @@ export const commonFormTemplate = (data) => {
       </div>
 
 <div style="margin-bottom: 50px; page-break-after: always;">
-        <p style="text-align: left; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
+        <p style="text-align: center; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN ORIGINAL</h2>
         <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
         
@@ -420,7 +420,7 @@ export const commonFormTemplate = (data) => {
       </div>
 
       <div style="margin-bottom: 50px; page-break-after: always;">
-        <p style="text-align: left; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
+        <p style="text-align: center; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN DUPLICATE</h2>
         <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
         
@@ -501,7 +501,7 @@ export const commonFormTemplate = (data) => {
       </div>
 
       <div style="margin-bottom: 50px; page-break-after: always;">
-        <p style="text-align: left; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
+        <p style="text-align: center; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN TRIPLICATE</h2>
         <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
         
@@ -575,7 +575,7 @@ export const commonFormTemplate = (data) => {
             </div>
           </div>
           
-          <p style="margin-top: 40px;">Received the Nomination Application duly accepted in duplicate.</p>
+          <p style="margin-top: 40px;">Received the Nomination Application duly accepted in Triplicate.</p>
           <p style="margin-top: 40px;">________________________________________<br>Signature of the Nomination Member</p>
           <p style="font-size: 12px; margin-top: 10px;">* Strike out which is not applicable.</p>
         </div>
