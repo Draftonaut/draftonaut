@@ -338,6 +338,168 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
+<div style="margin-bottom: 50px; page-break-after: always;">
+        <p style="text-align: left; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
+        <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN ORIGINAL</h2>
+        <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
+        
+        <div style="margin-bottom: 20px; margin-top: 30px;"> 
+          <p style="margin: 0;">To,</p>
+          <p style="margin: 0;">The Chairman/Secretary,</p>
+          <p style="margin: 0;">${data.societyName || "(Society Name)"}</p>
+          <p style="margin: 0; white-space: pre-wrap;">${data.buildingAddress || data.propertyAddress || "(Building Address)"}</p>
+        </div>
+        
+        <p>Sir,</p>
+        <p>1) ${pProSubj} <strong>${purchaserName}</strong> ${pIsAre} ${pMember} <strong>${data.societyName || "(Society Name)"}</strong> having registered address at <strong>${data.propertyAddress || "(Full Property Address)"}</strong>,</p>
+        
+        <p>2) ${pProSubj} hold the Share Certificate No. <strong>${data.shareCertificateNumber || "(Share Certificate No.)"}</strong>, for ten fully paid up share of Rs.50/- each, bearing distinctive numbers from <strong>${data.shareDistinctiveFrom || "(Share Certificate From)"}</strong>, to <strong>${data.shareDistinctiveTo || "(Share Certificate To.)"}</strong>, under <strong>${data.shareCertificateNumber || "(Share Certificate No.)"}</strong>, issued by the said society to ${pProObj}.</p>
+        
+        <p>3) ${pProSubj} also hold the at <strong>${data.propertyAddress || "(Full Property Address)"}</strong>, in the building of the said society.</p>
+        
+        <p>4) As provided under Rule 25 of the Maharashtra Co-operative Societies Rules, 1961. ${pProSubj} hereby nominate the person whose particulars are as given below.</p>
+        
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+          <tr>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Sr. No.</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Name of the Nominee</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Permanent address of the Nominee</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Relationship with the Nominator</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Share of each Nominees (percentage)</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
+          </tr>
+          <tr><td style="padding: 15px; text-align: center;">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td style="padding: 15px; text-align: center;">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td style="padding: 15px; text-align: center;">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+        
+        <p>5) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 on ${pProPoss} death, the shares mentioned above should please be transferred to the name of the above mentioned nominee, on his the complying with the provisions of the Bye-laws of the Society for the membership.<br>
+        <strong>OR</strong><br>
+        6) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 and the Bye-laws of the Society, ${pProSubj} state on ${pProPoss} death, the shares mentioned above and ${pProPoss} interest of the flat, the details of which are given above, should be transferred to Mr/Mrs...... the first-named nominee on his/her complying with the provisions of the Bye-laws of the Society regarding requirements of admission to membership, indemnifying the Society, against any claims made to the said shares and ${pProPoss} interest in the said flat by the other Nominee/Nominees.</p>
+        
+        <p>7) As Mr/Mrs.... the Nominee at Sr. No. ______ is the minor, ${pProSubj} hereby appoint Mr /Mrs..... as the guardian of the minor to represent the minor-nominee in the matters connected with this nomination.</p>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
+          <div>
+            <p>Place : _________________</p>
+            <p>Date : _________________</p>
+          </div>
+          <div style="text-align: center;">
+            <p><strong>${purchaserName}</strong></p>
+            <p>Signature of the Nominator ${capitalize(pMember)}</p>
+          </div>
+        </div>
+        
+        <p style="margin-top: 40px;"><strong>Witnesses :</strong></p>
+        <p>Name and Addresses of Witnesses : ________________________________________ Signature of the Witness</p>
+        <p>1) Shri/Shrimati . ________________________________________ Address ...________________________________________</p>
+        <p>2) Shri/Shrimati ________________________________________ Address ________________________________________</p>
+        
+        <div style="margin-top: 50px; border-top: 2px dashed #000; padding-top: 30px;">
+          <p>Place : _________________</p>
+          <p>Date : _________________</p>
+          <br>
+          <p>The Nomination Application was placed in the meeting of the Managing Committee of the society held on _______________.</p>
+          <p>And the same was accepted / rejected.</p>
+          
+          <div style="display: flex; justify-content: space-between; margin-top: 60px;">
+            <div>
+              <p>Date : _________________</p>
+            </div>
+            <div style="text-align: center;">
+              <p>Hon. Secretary</p>
+              <br>
+              <p><strong>${data.societyName || "(Society Name)"}</strong></p>
+            </div>
+          </div>
+          
+          <p style="margin-top: 40px;">Received the Nomination Application duly accepted in Original.</p>
+          <p style="margin-top: 40px;">________________________________________<br>Signature of the Nomination Member</p>
+          <p style="font-size: 12px; margin-top: 10px;">* Strike out which is not applicable.</p>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 50px; page-break-after: always;">
+        <p style="text-align: left; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
+        <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN DUPLICATE</h2>
+        <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
+        
+        <div style="margin-bottom: 20px; margin-top: 30px;"> 
+          <p style="margin: 0;">To,</p>
+          <p style="margin: 0;">The Chairman/Secretary,</p>
+          <p style="margin: 0;">${data.societyName || "(Society Name)"}</p>
+          <p style="margin: 0; white-space: pre-wrap;">${data.buildingAddress || data.propertyAddress || "(Building Address)"}</p>
+        </div>
+        
+        <p>Sir,</p>
+        <p>1) ${pProSubj} <strong>${purchaserName}</strong> ${pIsAre} ${pMember} <strong>${data.societyName || "(Society Name)"}</strong> having registered address at <strong>${data.propertyAddress || "(Full Property Address)"}</strong>,</p>
+        
+        <p>2) ${pProSubj} hold the Share Certificate No. <strong>${data.shareCertificateNumber || "(Share Certificate No.)"}</strong>, for ten fully paid up share of Rs.50/- each, bearing distinctive numbers from <strong>${data.shareDistinctiveFrom || "(Share Certificate From)"}</strong>, to <strong>${data.shareDistinctiveTo || "(Share Certificate To.)"}</strong>, under <strong>${data.shareCertificateNumber || "(Share Certificate No.)"}</strong>, issued by the said society to ${pProObj}.</p>
+        
+        <p>3) ${pProSubj} also hold the at <strong>${data.propertyAddress || "(Full Property Address)"}</strong>, in the building of the said society.</p>
+        
+        <p>4) As provided under Rule 25 of the Maharashtra Co-operative Societies Rules, 1961. ${pProSubj} hereby nominate the person whose particulars are as given below.</p>
+        
+        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+          <tr>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Sr. No.</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Name of the Nominee</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Permanent address of the Nominee</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Relationship with the Nominator</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Share of each Nominees (percentage)</th>
+            <th style="padding: 5px; font-size: 12px; text-align: center;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
+          </tr>
+          <tr><td style="padding: 15px; text-align: center;">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td style="padding: 15px; text-align: center;">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td style="padding: 15px; text-align: center;">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </table>
+        
+        <p>5) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 on ${pProPoss} death, the shares mentioned above should please be transferred to the name of the above mentioned nominee, on his the complying with the provisions of the Bye-laws of the Society for the membership.<br>
+        <strong>OR</strong><br>
+        6) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 and the Bye-laws of the Society, ${pProSubj} state on ${pProPoss} death, the shares mentioned above and ${pProPoss} interest of the flat, the details of which are given above, should be transferred to Mr/Mrs...... the first-named nominee on his/her complying with the provisions of the Bye-laws of the Society regarding requirements of admission to membership, indemnifying the Society, against any claims made to the said shares and ${pProPoss} interest in the said flat by the other Nominee/Nominees.</p>
+        
+        <p>7) As Mr/Mrs.... the Nominee at Sr. No. ______ is the minor, ${pProSubj} hereby appoint Mr /Mrs..... as the guardian of the minor to represent the minor-nominee in the matters connected with this nomination.</p>
+        
+        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
+          <div>
+            <p>Place : _________________</p>
+            <p>Date : _________________</p>
+          </div>
+          <div style="text-align: center;">
+            <p><strong>${purchaserName}</strong></p>
+            <p>Signature of the Nominator ${capitalize(pMember)}</p>
+          </div>
+        </div>
+        
+        <p style="margin-top: 40px;"><strong>Witnesses :</strong></p>
+        <p>Name and Addresses of Witnesses : ________________________________________ Signature of the Witness</p>
+        <p>1) Shri/Shrimati . ________________________________________ Address ...________________________________________</p>
+        <p>2) Shri/Shrimati ________________________________________ Address ________________________________________</p>
+        
+        <div style="margin-top: 50px; border-top: 2px dashed #000; padding-top: 30px;">
+          <p>Place : _________________</p>
+          <p>Date : _________________</p>
+          <br>
+          <p>The Nomination Application was placed in the meeting of the Managing Committee of the society held on _______________.</p>
+          <p>And the same was accepted / rejected.</p>
+          
+          <div style="display: flex; justify-content: space-between; margin-top: 60px;">
+            <div>
+              <p>Date : _________________</p>
+            </div>
+            <div style="text-align: center;">
+              <p>Hon. Secretary</p>
+              <br>
+              <p><strong>${data.societyName || "(Society Name)"}</strong></p>
+            </div>
+          </div>
+          
+          <p style="margin-top: 40px;">Received the Nomination Application duly accepted in duplicate.</p>
+          <p style="margin-top: 40px;">________________________________________<br>Signature of the Nomination Member</p>
+          <p style="font-size: 12px; margin-top: 10px;">* Strike out which is not applicable.</p>
+        </div>
+      </div>
+
       <div style="margin-bottom: 50px; page-break-after: always;">
         <p style="text-align: left; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN TRIPLICATE</h2>
