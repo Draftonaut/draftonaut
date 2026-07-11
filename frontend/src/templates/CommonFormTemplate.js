@@ -276,7 +276,7 @@ export const commonFormTemplate = (data) => {
         <p>Date: _________________</p>
         <h2 style="text-align: center; text-decoration: underline; font-size: 18px; margin: 20px 0;">AUTHORITY LETTER</h2>
         
-        <p>${sProSubj} <strong>${sellerName}</strong>, aged- <strong>${sellerAge}</strong> years, having Pan No. <strong>${sellerPan}</strong>, an ${sAdult}, Indian inhabitants, having address at <strong>${data.sellerAddress || "(Seller Address)"}</strong> ${sProSubj} have applied CIDCO for Transfer of <strong>${data.propertyAddress || "(Full Property Address)"}</strong>, to <strong>${purchaserName}</strong>, vide application No. ______________ dt. ______________.</p>
+        <p>${sProSubj} <strong>${sellerName}</strong>, aged- <strong>${sellerAge}</strong> years, having Pan No. <strong>${sellerPan}</strong>,  ${sAdult}, Indian inhabitants, having address at <strong>${data.sellerAddress || "(Seller Address)"}</strong> ${sProSubj} have applied CIDCO for Transfer of <strong>${data.propertyAddress || "(Full Property Address)"}</strong>, to <strong>${purchaserName}</strong>, vide application No. ______________ dt. ______________.</p>
         
         <p>However, due to some ${sProPoss} personal reasons, ${sProSubj} ${sAmAre} unable to attend CIDCO office in this matter.</p>
         
