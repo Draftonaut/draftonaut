@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logoblue.png";
-import bgImage from "../assets/agreementbg.png";
+import bgImage from "../assets/agreementbg.webp";
 
 function UploadDocument() {
   const navigate = useNavigate();

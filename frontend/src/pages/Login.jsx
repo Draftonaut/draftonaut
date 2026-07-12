@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import logo from "../assets/logo.png";
-import bgImage from "../assets/background.png"; // UPDATE THIS PATH
+import bgImage from "../assets/background.webp"; // UPDATE THIS PATH
 
 function Login() {
   const navigate = useNavigate();

@@ -5,8 +5,8 @@ import { signOut } from "firebase/auth";
 import { auth } from "../firebase";
 import logo from "../assets/logoblue.png";
 import mobileLogo from "../assets/logo.png";
-import bgImage from "../assets/bg.png";
-import mobileBgImage from "../assets/mobilebg.png";
+import bgImage from "../assets/bg.webp";
+import mobileBgImage from "../assets/mobilebg.webp";
 
 function Navbar({ onMyWorkClick }) {
   const navigate = useNavigate();

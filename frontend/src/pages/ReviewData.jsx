@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import logo from "../assets/logoblue.png";
-import bgImage from "../assets/agreementbg.png";
+import bgImage from "../assets/agreementbg.webp";
 
 function ReviewData() {
   const navigate = useNavigate();

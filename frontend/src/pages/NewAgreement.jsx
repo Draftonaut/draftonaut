@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logoblue.png";
-import bgImage from "../assets/formbg.png";
+import bgImage from "../assets/formbg.webp";
 
 // =========================================================================
 // DATE FORMATTER ENGINE

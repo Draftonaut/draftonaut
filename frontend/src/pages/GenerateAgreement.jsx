@@ -5,7 +5,7 @@ import { auth } from "../firebase";
 import html2pdf from "html2pdf.js";
 
 // IMPORT YOUR ASSETS HERE (Adjust filenames as needed)
-import bgImage from "../assets/agreementbg.png";
+import bgImage from "../assets/agreementbg.webp";
 import logoImage from "../assets/logoblue.png";
 
 // 100% FREE LOCAL TINYMCE IMPORTS
