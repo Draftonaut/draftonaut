@@ -76,7 +76,7 @@ function DocumentGenerator() {
 
       // Ensure this URL matches your backend endpoint
       const response = await fetch(
-        "https://draftonaut-api.onrender.com/api/extract",
+        "https://draftonaut.onrender.com/api/extract",
         {
           method: "POST",
           body: data,
