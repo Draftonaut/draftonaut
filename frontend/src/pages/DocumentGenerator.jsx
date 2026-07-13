@@ -72,13 +72,22 @@ function DocumentGenerator() {
     data.append("document", file);
 
     try {
-      // Ensure this URL matches your backend endpoint
-      const response = await fetch("https://draftonaut.onrender.com", {
-        method: "POST",
-        body: data,
-      });
+      setIsExtracting(true); // Assuming you have this state
 
-      if (!response.ok) throw new Error("Extraction failed");
+      // Ensure this URL matches your backend endpoint
+      const response = await fetch(
+        "https://draftonaut-api.onrender.com/api/extract",
+        {
+          method: "POST",
+          body: data,
+        },
+      );
+
+      // FIX: Read the actual backend error message instead of a generic one
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Server returned an error");
+      }
 
       const extracted = await response.json();
 
@@ -111,13 +120,14 @@ function DocumentGenerator() {
         setPurchasers(extracted.purchasers);
       }
     } catch (error) {
-      console.error("Error auto-filling document:", error);
-      alert("Failed to auto-fill document. Please fill manually.");
+      // FIX: Print the exact backend error to the console and the alert
+      console.error("Error auto-filling document:", error.message);
+      alert(`Failed to extract data: ${error.message}`);
     } finally {
       setIsExtracting(false);
       event.target.value = "";
     }
-  };
+  }; // <--- THIS WAS THE MISSING BRACE!
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -137,6 +147,7 @@ function DocumentGenerator() {
 
   const addSeller = () =>
     setSellers([...sellers, { title: "Mr.", name: "", age: "", pan: "" }]);
+
   const removeSeller = (index) =>
     sellers.length > 1 && setSellers(sellers.filter((_, i) => i !== index));
 
@@ -145,6 +156,7 @@ function DocumentGenerator() {
       ...purchasers,
       { title: "Mr.", name: "", age: "", pan: "" },
     ]);
+
   const removePurchaser = (index) =>
     purchasers.length > 1 &&
     setPurchasers(purchasers.filter((_, i) => i !== index));

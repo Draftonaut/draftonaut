@@ -5,8 +5,9 @@ const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs");
 const pdfParse = require("pdf-parse");
-const mammoth = require("mammoth"); // Added for DOC/DOCX
-const Tesseract = require("tesseract.js"); // Added for Image Text Extraction
+const mammoth = require("mammoth");
+const WordExtractor = require("word-extractor"); // NEW: Added for legacy .doc files
+const Tesseract = require("tesseract.js");
 const OpenAI = require("openai");
 const mongoose = require("mongoose");
 const connectDB = require("./db");
@@ -42,9 +43,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
-  storage,
-});
+const upload = multer({ storage });
 
 // =========================
 // HOME ROUTE
@@ -59,7 +58,7 @@ app.get("/", (req, res) => {
 app.get("/test-openai", async (req, res) => {
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-5.4",
+      model: "gpt-4o",
       messages: [
         {
           role: "user",
@@ -74,7 +73,6 @@ app.get("/test-openai", async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-
     res.status(500).json({
       success: false,
       message: error.message,
@@ -83,7 +81,7 @@ app.get("/test-openai", async (req, res) => {
 });
 
 // =========================
-// DOCUMENT UPLOAD + EXTRACT TEXT (Updated for Docs & Images)
+// DOCUMENT UPLOAD + EXTRACT TEXT
 // =========================
 app.post("/upload", upload.single("document"), async (req, res) => {
   try {
@@ -102,12 +100,33 @@ app.post("/upload", upload.single("document"), async (req, res) => {
       const dataBuffer = fs.readFileSync(filePath);
       const pdfData = await pdfParse(dataBuffer);
       extractedText = pdfData.text;
-    } else if (
-      mimeType.includes("wordprocessingml") ||
-      mimeType === "application/msword"
-    ) {
-      const docxData = await mammoth.extractRawText({ path: filePath });
-      extractedText = docxData.value;
+    } else if (mimeType.includes("wordprocessingml")) {
+      const dataBuffer = fs.readFileSync(filePath);
+      const docxData = await mammoth.extractRawText({ buffer: dataBuffer });
+      extractedText = docxData.value.trim();
+
+      if (!extractedText) {
+        fs.unlinkSync(filePath);
+        return res.status(400).json({
+          success: false,
+          message:
+            "No readable text found. If this is a scanned document, please use PDF or Image format.",
+        });
+      }
+    } else if (mimeType === "application/msword") {
+      // NEW: Handle legacy .doc safely
+      const extractor = new WordExtractor();
+      const extracted = await extractor.extract(filePath);
+      extractedText = extracted.getBody().trim();
+
+      if (!extractedText) {
+        fs.unlinkSync(filePath);
+        return res.status(400).json({
+          success: false,
+          message:
+            "No readable text found in this .doc file. If this is a scanned document, please use PDF or Image format.",
+        });
+      }
     } else if (mimeType.startsWith("image/")) {
       const tesseractResult = await Tesseract.recognize(filePath, "eng");
       extractedText = tesseractResult.data.text;
@@ -115,7 +134,8 @@ app.post("/upload", upload.single("document"), async (req, res) => {
       fs.unlinkSync(filePath);
       return res.status(400).json({
         success: false,
-        message: "Unsupported file type. Please upload PDF, DOCX, or Image.",
+        message:
+          "Unsupported file type. Please upload PDF, DOCX, DOC, or Image.",
       });
     }
 
@@ -143,7 +163,7 @@ app.post("/upload", upload.single("document"), async (req, res) => {
 });
 
 // =========================
-// EXTRACT FORM DATA (AUTO-FILL) (Updated for Docs)
+// EXTRACT FORM DATA (AUTO-FILL)
 // =========================
 app.post("/api/extract", upload.single("document"), async (req, res) => {
   try {
@@ -167,15 +187,45 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
           text: `Extract the form data from this document text:\n\n${pdfData.text}`,
         },
       ];
-    } else if (
-      mimeType.includes("wordprocessingml") ||
-      mimeType === "application/msword"
-    ) {
-      const docxData = await mammoth.extractRawText({ path: filePath });
+    } else if (mimeType.includes("wordprocessingml")) {
+      const dataBuffer = fs.readFileSync(filePath);
+      const docxData = await mammoth.extractRawText({ buffer: dataBuffer });
+      const text = docxData.value.trim();
+
+      if (!text) {
+        fs.unlinkSync(filePath);
+        return res.status(400).json({
+          success: false,
+          message:
+            "No readable text found. If this is a scanned document, please use PDF or Image format.",
+        });
+      }
+
       extractionContent = [
         {
           type: "text",
-          text: `Extract the form data from this document text:\n\n${docxData.value}`,
+          text: `Extract the form data from this document text:\n\n${text}`,
+        },
+      ];
+    } else if (mimeType === "application/msword") {
+      // NEW: Handle legacy .doc safely
+      const extractor = new WordExtractor();
+      const extracted = await extractor.extract(filePath);
+      const text = extracted.getBody().trim();
+
+      if (!text) {
+        fs.unlinkSync(filePath);
+        return res.status(400).json({
+          success: false,
+          message:
+            "No readable text found in this .doc file. If this is a scanned document, please use PDF or Image format.",
+        });
+      }
+
+      extractionContent = [
+        {
+          type: "text",
+          text: `Extract the form data from this document text:\n\n${text}`,
         },
       ];
     } else if (mimeType.startsWith("image/")) {
@@ -187,7 +237,6 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
         },
         {
           type: "image_url",
-          // Removed data prefix as GPT-4o Vision requires standard base64 URL format
           image_url: { url: `data:${mimeType};base64,${base64Image}` },
         },
       ];
@@ -196,11 +245,10 @@ app.post("/api/extract", upload.single("document"), async (req, res) => {
       return res.status(400).json({
         success: false,
         message:
-          "Unsupported file type. Please upload a PDF, DOC, DOCX, or Image.",
+          "Unsupported file type. Please upload a PDF, DOCX, DOC, or Image.",
       });
     }
 
-    // Using a model capable of JSON responses and Vision (gpt-4o) with strict rules
     const response = await openai.chat.completions.create({
       model: "gpt-4o",
       response_format: { type: "json_object" },
@@ -275,7 +323,7 @@ app.post("/extract-history", async (req, res) => {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-5.4",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
@@ -555,7 +603,7 @@ app.post("/api/ai-clause", async (req, res) => {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-5.4",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
