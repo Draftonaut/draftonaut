@@ -73,13 +73,10 @@ function DocumentGenerator() {
 
     try {
       // Ensure this URL matches your backend endpoint
-      const response = await fetch(
-        "https://draftonaut.onrender.com/api/extract",
-        {
-          method: "POST",
-          body: data,
-        },
-      );
+      const response = await fetch("https://draftonaut.onrender.com", {
+        method: "POST",
+        body: data,
+      });
 
       if (!response.ok) throw new Error("Extraction failed");
 
