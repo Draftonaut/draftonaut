@@ -57,7 +57,7 @@ export const commonFormTemplate = (data) => {
     if (!amount || isNaN(amount)) return "RS. (Total Consideration Amount)/-";
 
     const num = parseInt(amount, 10);
-    const formatString = new Intl.NumberFormat("en-IN").format(num); // Adds Indian commas
+    const formatString = new Intl.NumberFormat("en-IN").format(num);
 
     const a = [
       "",
@@ -136,12 +136,10 @@ export const commonFormTemplate = (data) => {
   const considerationText = formatIndianCurrency(data.totalConsideration);
 
   return `
-    <div style="font-family: 'Times New Roman', Times, serif; max-width: 800px; margin: 0 auto; padding: 40px; line-height: 1.6; color: #000;">
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 14px; line-height: 1.6; color: #000;">
       
-      <div style="margin-bottom: 50px; page-break-after: always;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-          <p>Dated: _________________</p>
-        </div>
+      <div>
+        <p>Dated: _________________</p>
         <p>To,<br>
         The Estate Officer,<br>
         Cidco Ltd., Koparkhairane<br>
@@ -160,14 +158,14 @@ export const commonFormTemplate = (data) => {
           <p>(Authorized Signatory)</p>
         </div>
       </div>
+      
+      <br clear="all" style="page-break-before: always;" />
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <div>
         <div style="text-align: center; margin-bottom: 20px;">
           <p><strong>${data.societyName || "Society Full name"}</strong></p>
         </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-          <p>Dated: _________________</p>
-        </div>
+        <p>Dated: _________________</p>
         <p>To,<br>
         The Estate officer,<br>
         Cidco Ltd., Koparkhairane<br>
@@ -192,8 +190,10 @@ export const commonFormTemplate = (data) => {
           <p>(Authorized Signatory)</p>
         </div>
       </div>
+      
+      <br clear="all" style="page-break-before: always;" />
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <div>
         <div style="text-align: center; margin-bottom: 30px;">
           <p><strong>${data.societyName || "Society Full name"}</strong></p>
         </div>
@@ -213,7 +213,9 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p>To,<br>
         The Estate Office<br>
         Cidco Ltd.<br>
@@ -231,14 +233,19 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
-          <div style="text-align: left; width: 350px;">
-            <p style="margin: 0;"><strong>${sellerName}</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${data.sellerAddress || "(SELLER ADDRESS)"}</p>
-            <p style="margin-top: 10px;">Dated : _________________</p>
-          </div>
-        </div>
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" style="border: none;"></td>
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p style="margin: 0;"><strong>${sellerName}</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${data.sellerAddress || "(SELLER ADDRESS)"}</p>
+              <p style="margin-top: 10px;">Dated : _________________</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="margin-bottom: 20px;">
           <p style="margin: 0;">To,</p>
@@ -272,7 +279,9 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p>Date: _________________</p>
         <h2 style="text-align: center; text-decoration: underline; font-size: 18px; margin: 20px 0;">AUTHORITY LETTER</h2>
         
@@ -282,17 +291,19 @@ export const commonFormTemplate = (data) => {
         
         <p>Therefore, ${sProSubj} have authorized Mr._______________________,address __________________________________________ Telephone No. ___________________ to appear on ${sProPoss} behalf on CIDCO office in this matter to submit ${sProPoss} application and to receive Transfer NOC, Mortgage NOC and all other relevant papers.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-          <div>
-            <p>Specimen Signature Of Authorized ${sPerson}</p>
-            <p style="margin-top: 40px;">___________________________</p>
-          </div>
-          <div style="text-align: center;">
-            <br><br><br>
-            <p><strong>${sellerName}</strong></p>
-            <p>${sLabel}</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>Specimen Signature Of Authorized ${sPerson}</p>
+              <p style="margin-top: 40px;">___________________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <br><br><br>
+              <p><strong>${sellerName}</strong></p>
+              <p>${sLabel}</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="text-align: center; margin-top: 60px;">
           <br><br>
@@ -301,14 +312,19 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
-          <div style="text-align: left; width: 350px;">
-            <p style="margin: 0;">From: <strong>${purchaserName}</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${data.purchaserAddress || "(Purchaser Address)"}</p>
-            <p style="margin-top: 10px;">Dated: _________________</p>
-          </div>
-        </div>
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" style="border: none;"></td>
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p style="margin: 0;">From: <strong>${purchaserName}</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${data.purchaserAddress || "(Purchaser Address)"}</p>
+              <p style="margin-top: 10px;">Dated: _________________</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="margin-bottom: 20px;">
           <p style="margin: 0;">To,</p>
@@ -338,7 +354,9 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-<div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="text-align: center; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN ORIGINAL</h2>
         <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
@@ -359,18 +377,18 @@ export const commonFormTemplate = (data) => {
         
         <p>4) As provided under Rule 25 of the Maharashtra Co-operative Societies Rules, 1961. ${pProSubj} hereby nominate the person whose particulars are as given below.</p>
         
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+        <table width="100%" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 20px 0;">
           <tr>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Sr. No.</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Name of the Nominee</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Permanent address of the Nominee</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Relationship with the Nominator</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Share of each Nominees (percentage)</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
+            <th align="center" style="font-size: 12px;">Sr. No.</th>
+            <th align="center" style="font-size: 12px;">Name of the Nominee</th>
+            <th align="center" style="font-size: 12px;">Permanent address of the Nominee</th>
+            <th align="center" style="font-size: 12px;">Relationship with the Nominator</th>
+            <th align="center" style="font-size: 12px;">Share of each Nominees (percentage)</th>
+            <th align="center" style="font-size: 12px;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
           </tr>
-          <tr><td style="padding: 15px; text-align: center;">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td style="padding: 15px; text-align: center;">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td style="padding: 15px; text-align: center;">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
         </table>
         
         <p>5) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 on ${pProPoss} death, the shares mentioned above should please be transferred to the name of the above mentioned nominee, on his the complying with the provisions of the Bye-laws of the Society for the membership.<br>
@@ -379,16 +397,18 @@ export const commonFormTemplate = (data) => {
         
         <p>7) As Mr/Mrs.... the Nominee at Sr. No. ______ is the minor, ${pProSubj} hereby appoint Mr /Mrs..... as the guardian of the minor to represent the minor-nominee in the matters connected with this nomination.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-          <div>
-            <p>Place : _________________</p>
-            <p>Date : _________________</p>
-          </div>
-          <div style="text-align: center;">
-            <p><strong>${purchaserName}</strong></p>
-            <p>Signature of the Nominator ${capitalize(pMember)}</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>Place : _________________</p>
+              <p>Date : _________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <p><strong>${purchaserName}</strong></p>
+              <p>Signature of the Nominator ${capitalize(pMember)}</p>
+            </td>
+          </tr>
+        </table>
         
         <p style="margin-top: 40px;"><strong>Witnesses :</strong></p>
         <p>Name and Addresses of Witnesses : ________________________________________ Signature of the Witness</p>
@@ -402,16 +422,18 @@ export const commonFormTemplate = (data) => {
           <p>The Nomination Application was placed in the meeting of the Managing Committee of the society held on _______________.</p>
           <p>And the same was accepted / rejected.</p>
           
-          <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-            <div>
-              <p>Date : _________________</p>
-            </div>
-            <div style="text-align: center;">
-              <p>Hon. Secretary</p>
-              <br>
-              <p><strong>${data.societyName || "(Society Name)"}</strong></p>
-            </div>
-          </div>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+            <tr style="border: none;">
+              <td width="50%" align="left" valign="top" style="border: none;">
+                <p>Date : _________________</p>
+              </td>
+              <td width="50%" align="center" valign="top" style="border: none;">
+                <p>Hon. Secretary</p>
+                <br>
+                <p><strong>${data.societyName || "(Society Name)"}</strong></p>
+              </td>
+            </tr>
+          </table>
           
           <p style="margin-top: 40px;">Received the Nomination Application duly accepted in Original.</p>
           <p style="margin-top: 40px;">________________________________________<br>Signature of the Nomination Member</p>
@@ -419,7 +441,9 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="text-align: center; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN DUPLICATE</h2>
         <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
@@ -440,18 +464,18 @@ export const commonFormTemplate = (data) => {
         
         <p>4) As provided under Rule 25 of the Maharashtra Co-operative Societies Rules, 1961. ${pProSubj} hereby nominate the person whose particulars are as given below.</p>
         
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+        <table width="100%" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 20px 0;">
           <tr>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Sr. No.</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Name of the Nominee</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Permanent address of the Nominee</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Relationship with the Nominator</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Share of each Nominees (percentage)</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
+            <th align="center" style="font-size: 12px;">Sr. No.</th>
+            <th align="center" style="font-size: 12px;">Name of the Nominee</th>
+            <th align="center" style="font-size: 12px;">Permanent address of the Nominee</th>
+            <th align="center" style="font-size: 12px;">Relationship with the Nominator</th>
+            <th align="center" style="font-size: 12px;">Share of each Nominees (percentage)</th>
+            <th align="center" style="font-size: 12px;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
           </tr>
-          <tr><td style="padding: 15px; text-align: center;">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td style="padding: 15px; text-align: center;">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td style="padding: 15px; text-align: center;">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
         </table>
         
         <p>5) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 on ${pProPoss} death, the shares mentioned above should please be transferred to the name of the above mentioned nominee, on his the complying with the provisions of the Bye-laws of the Society for the membership.<br>
@@ -460,16 +484,18 @@ export const commonFormTemplate = (data) => {
         
         <p>7) As Mr/Mrs.... the Nominee at Sr. No. ______ is the minor, ${pProSubj} hereby appoint Mr /Mrs..... as the guardian of the minor to represent the minor-nominee in the matters connected with this nomination.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-          <div>
-            <p>Place : _________________</p>
-            <p>Date : _________________</p>
-          </div>
-          <div style="text-align: center;">
-            <p><strong>${purchaserName}</strong></p>
-            <p>Signature of the Nominator ${capitalize(pMember)}</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>Place : _________________</p>
+              <p>Date : _________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <p><strong>${purchaserName}</strong></p>
+              <p>Signature of the Nominator ${capitalize(pMember)}</p>
+            </td>
+          </tr>
+        </table>
         
         <p style="margin-top: 40px;"><strong>Witnesses :</strong></p>
         <p>Name and Addresses of Witnesses : ________________________________________ Signature of the Witness</p>
@@ -483,16 +509,18 @@ export const commonFormTemplate = (data) => {
           <p>The Nomination Application was placed in the meeting of the Managing Committee of the society held on _______________.</p>
           <p>And the same was accepted / rejected.</p>
           
-          <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-            <div>
-              <p>Date : _________________</p>
-            </div>
-            <div style="text-align: center;">
-              <p>Hon. Secretary</p>
-              <br>
-              <p><strong>${data.societyName || "(Society Name)"}</strong></p>
-            </div>
-          </div>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+            <tr style="border: none;">
+              <td width="50%" align="left" valign="top" style="border: none;">
+                <p>Date : _________________</p>
+              </td>
+              <td width="50%" align="center" valign="top" style="border: none;">
+                <p>Hon. Secretary</p>
+                <br>
+                <p><strong>${data.societyName || "(Society Name)"}</strong></p>
+              </td>
+            </tr>
+          </table>
           
           <p style="margin-top: 40px;">Received the Nomination Application duly accepted in duplicate.</p>
           <p style="margin-top: 40px;">________________________________________<br>Signature of the Nomination Member</p>
@@ -500,7 +528,9 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="text-align: center; font-weight: bold;">APPENDIX -14<br>(For Society's Record)</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">FORM OF NOMINATION APPLICATION<br>TO BE FURNISHED IN TRIPLICATE</h2>
         <p style="text-align: center;">(Under the Bye-Law No. 32)</p>
@@ -521,18 +551,18 @@ export const commonFormTemplate = (data) => {
         
         <p>4) As provided under Rule 25 of the Maharashtra Co-operative Societies Rules, 1961. ${pProSubj} hereby nominate the person whose particulars are as given below.</p>
         
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+        <table width="100%" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 20px 0;">
           <tr>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Sr. No.</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Name of the Nominee</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Permanent address of the Nominee</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Relationship with the Nominator</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Share of each Nominees (percentage)</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
+            <th align="center" style="font-size: 12px;">Sr. No.</th>
+            <th align="center" style="font-size: 12px;">Name of the Nominee</th>
+            <th align="center" style="font-size: 12px;">Permanent address of the Nominee</th>
+            <th align="center" style="font-size: 12px;">Relationship with the Nominator</th>
+            <th align="center" style="font-size: 12px;">Share of each Nominees (percentage)</th>
+            <th align="center" style="font-size: 12px;">Date of Birth Of the Nominee if the Nominee Is a Minor</th>
           </tr>
-          <tr><td style="padding: 15px; text-align: center;">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td style="padding: 15px; text-align: center;">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
-          <tr><td style="padding: 15px; text-align: center;">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">1)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">2)</td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td align="center">3)</td><td></td><td></td><td></td><td></td><td></td></tr>
         </table>
         
         <p>5) As provided under section 30 of the Maharashtra Co-operative Societies Act. 1960 on ${pProPoss} death, the shares mentioned above should please be transferred to the name of the above mentioned nominee, on his the complying with the provisions of the Bye-laws of the Society for the membership.<br>
@@ -541,16 +571,18 @@ export const commonFormTemplate = (data) => {
         
         <p>7) As Mr/Mrs.... the Nominee at Sr. No. ______ is the minor, ${pProSubj} hereby appoint Mr /Mrs..... as the guardian of the minor to represent the minor-nominee in the matters connected with this nomination.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-          <div>
-            <p>Place : _________________</p>
-            <p>Date : _________________</p>
-          </div>
-          <div style="text-align: center;">
-            <p><strong>${purchaserName}</strong></p>
-            <p>Signature of the Nominator ${capitalize(pMember)}</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>Place : _________________</p>
+              <p>Date : _________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <p><strong>${purchaserName}</strong></p>
+              <p>Signature of the Nominator ${capitalize(pMember)}</p>
+            </td>
+          </tr>
+        </table>
         
         <p style="margin-top: 40px;"><strong>Witnesses :</strong></p>
         <p>Name and Addresses of Witnesses : ________________________________________ Signature of the Witness</p>
@@ -564,16 +596,18 @@ export const commonFormTemplate = (data) => {
           <p>The Nomination Application was placed in the meeting of the Managing Committee of the society held on _______________.</p>
           <p>And the same was accepted / rejected.</p>
           
-          <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-            <div>
-              <p>Date : _________________</p>
-            </div>
-            <div style="text-align: center;">
-              <p>Hon. Secretary</p>
-              <br>
-              <p><strong>${data.societyName || "(Society Name)"}</strong></p>
-            </div>
-          </div>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+            <tr style="border: none;">
+              <td width="50%" align="left" valign="top" style="border: none;">
+                <p>Date : _________________</p>
+              </td>
+              <td width="50%" align="center" valign="top" style="border: none;">
+                <p>Hon. Secretary</p>
+                <br>
+                <p><strong>${data.societyName || "(Society Name)"}</strong></p>
+              </td>
+            </tr>
+          </table>
           
           <p style="margin-top: 40px;">Received the Nomination Application duly accepted in Triplicate.</p>
           <p style="margin-top: 40px;">________________________________________<br>Signature of the Nomination Member</p>
@@ -581,18 +615,23 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="font-weight: bold; text-align: center;">APPENDIX -20(1)</p>
         <p style="text-align: center;">(Under the Bye-law No.38(a)</p>
         <p style="text-align: center; font-weight: bold; margin-top: 20px;">A form of Notice of intention of ${sMemberLabel} to transfer ${sHisTheir} Shares and interest in the Capital/Property of the Society.</p>
         
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-top: 30px;">
-          <div style="text-align: left; width: 350px;">
-            <p style="margin: 0;"><strong>${sellerName}</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${data.sellerAddress || "(SELLER ADDRESS)"}</p>
-            <p style="margin-top: 10px;">Dated : _________________</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; margin-top: 30px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" style="border: none;"></td>
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p style="margin: 0;"><strong>${sellerName}</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${data.sellerAddress || "(SELLER ADDRESS)"}</p>
+              <p style="margin-top: 10px;">Dated : _________________</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="margin-bottom: 20px;">
           <p style="margin: 0;">To,</p>
@@ -608,33 +647,40 @@ export const commonFormTemplate = (data) => {
         
         <p>The consent of the ${pTransferee} is enclosed.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-          <div>
-            <p>Place : _________________</p>
-            <p>Date : _________________</p>
-            <br>
-            <p>Encl : Consent letter from the ${pTransferee}</p>
-          </div>
-          <div style="text-align: right;">
-            <p>Yours faithfully</p>
-            <br><br><br>
-            <p><strong>${sellerName}</strong></p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>Place : _________________</p>
+              <p>Date : _________________</p>
+              <br>
+              <p>Encl : Consent letter from the ${pTransferee}</p>
+            </td>
+            <td width="50%" align="right" valign="top" style="border: none;">
+              <p>Yours faithfully</p>
+              <br><br><br>
+              <p><strong>${sellerName}</strong></p>
+            </td>
+          </tr>
+        </table>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="font-weight: bold; text-align: center;">APPENDIX - 20(2)</p>
         <p style="text-align: center;">[Under the Bye-law No.38 (a)]</p>
         <p style="text-align: center; font-weight: bold; margin-top: 20px;">A form of letter of consent of the proposed ${pTransferee} for the transfer of the shares and interest of the ${sMember} (${sTransferor}) to ${pProObj} (${pTransferee})</p>
         
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-top: 30px;">
-          <div style="text-align: left; width: 350px;">
-            <p style="margin: 0;"><strong>${purchaserName}</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${data.purchaserAddress || "(PURCHASER ADDRESS)"}</p>
-            <p style="margin-top: 10px;">Dated : _________________</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; margin-top: 30px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" style="border: none;"></td>
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p style="margin: 0;"><strong>${purchaserName}</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${data.purchaserAddress || "(PURCHASER ADDRESS)"}</p>
+              <p style="margin-top: 10px;">Dated : _________________</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="margin-bottom: 20px;">
           <p style="margin: 0;">To,</p>
@@ -659,18 +705,23 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="font-weight: bold; text-align: center;">APPENDIX-21</p>
         <p style="text-align: center;">[Under bye-law No.38(e)(i)]</p>
         <p style="text-align: center; font-weight: bold; margin-top: 20px;">Form of application for transfer of shares and interest in the Capital Property of the Society by the Proposed ${sTransferor} (being an ${isMultiSeller ? "individuals" : "individual"})</p>
         
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-top: 30px;">
-          <div style="text-align: left; width: 350px;">
-            <p style="margin: 0;"><strong>${sellerName}</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${data.sellerAddress || "(SELLER ADDRESS)"}</p>
-            <p style="margin-top: 10px;">Dated : _________________</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; margin-top: 30px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" style="border: none;"></td>
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p style="margin: 0;"><strong>${sellerName}</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${data.sellerAddress || "(SELLER ADDRESS)"}</p>
+              <p style="margin-top: 10px;">Dated : _________________</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="margin-bottom: 20px;">
           <p style="margin: 0;">To,</p>
@@ -712,18 +763,23 @@ export const commonFormTemplate = (data) => {
         </div>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="font-weight: bold; text-align: center;">APPENDIX-23</p>
         <p style="text-align: center;">[Under bye-law No.38 (e) (ii)]</p>
         <p style="text-align: center; font-weight: bold; margin-top: 20px;">Form of application for membership of the Society by the Proposed ${pTransferee} (being an ${pIndividual})</p>
         
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; margin-top: 30px;">
-          <div style="text-align: left; width: 350px;">
-            <p style="margin: 0;"><strong>${purchaserName}</strong></p>
-            <p style="margin: 0; white-space: pre-wrap;">${data.purchaserAddress || "(PURCHASER ADDRESS)"}</p>
-            <p style="margin-top: 10px;">Dated : _________________</p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px; margin-top: 30px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" style="border: none;"></td>
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p style="margin: 0;"><strong>${purchaserName}</strong></p>
+              <p style="margin: 0; white-space: pre-wrap;">${data.purchaserAddress || "(PURCHASER ADDRESS)"}</p>
+              <p style="margin-top: 10px;">Dated : _________________</p>
+            </td>
+          </tr>
+        </table>
         
         <div style="margin-bottom: 20px;">
           <p style="margin: 0;">To,</p>
@@ -754,13 +810,13 @@ export const commonFormTemplate = (data) => {
         <strong>OR</strong><br>
         ${pProSubj} give below the particulars of the Flat owned by ${pProObj} any of the members of ${pProPoss} family the persons dependent on ${pProObj}, in the area of the society.</p>
         
-        <table style="width: 100%; border-collapse: collapse; margin: 20px 0;" border="1">
+        <table width="100%" border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; margin: 20px 0;">
           <tr>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">S. no</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Name of the person</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Particulars of the plot's/Flat owned by ${pProObj} or ${pProPoss} family the person dependant on ${pProObj} in the area of operation of the Society</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Location of the Plot/Flat house</th>
-            <th style="padding: 5px; font-size: 12px; text-align: center;">Reasons us to why it is necessary to have a Flat in this society</th>
+            <th align="center" style="font-size: 12px;">S. no</th>
+            <th align="center" style="font-size: 12px;">Name of the person</th>
+            <th align="center" style="font-size: 12px;">Particulars of the plot's/Flat owned by ${pProObj} or ${pProPoss} family the person dependant on ${pProObj} in the area of operation of the Society</th>
+            <th align="center" style="font-size: 12px;">Location of the Plot/Flat house</th>
+            <th align="center" style="font-size: 12px;">Reasons us to why it is necessary to have a Flat in this society</th>
           </tr>
           <tr><td style="padding: 15px;"></td><td></td><td></td><td></td><td></td></tr>
           <tr><td style="padding: 15px;"></td><td></td><td></td><td></td><td></td></tr>
@@ -780,20 +836,24 @@ export const commonFormTemplate = (data) => {
         
         <p>13. ${pProSubj} request you to please admit ${pProObj} as a ${pMember} of the said society and transfer the shares and the interest of the ${sTransferor} in the capital property of the said society to ${pProPoss} name.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 60px;">
-          <div>
-            <p>Place: _________________</p>
-            <p>Date: _________________</p>
-          </div>
-          <div style="text-align: right;">
-            <p>Yours faithfully,</p>
-            <br><br><br>
-            <p><strong>${purchaserName}</strong></p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 60px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>Place: _________________</p>
+              <p>Date: _________________</p>
+            </td>
+            <td width="50%" align="right" valign="top" style="border: none;">
+              <p>Yours faithfully,</p>
+              <br><br><br>
+              <p><strong>${purchaserName}</strong></p>
+            </td>
+          </tr>
+        </table>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <p style="font-weight: bold; text-align: right;">FORM NO. 4</p>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">COMMON</h2>
         <p style="text-align: center;">UNDER BYE LAW NO. 17 (B) AND 19(A)(IV)</p>
@@ -803,20 +863,24 @@ export const commonFormTemplate = (data) => {
         
         <p>${pProSubj}, further give the undertaking that no change of user will be made by ${pProObj} without the previous permission in writing, of the committee of the society.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 80px;">
-          <div>
-            <p>PLACE : Navi Mumbai</p>
-            <p>DATE : _________________</p>
-          </div>
-          <div style="text-align: center;">
-            <p>Signature</p>
-            <br><br>
-            <p><strong>${purchaserName}</strong></p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 80px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>PLACE : Navi Mumbai</p>
+              <p>DATE : _________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <p>Signature</p>
+              <br><br>
+              <p><strong>${purchaserName}</strong></p>
+            </td>
+          </tr>
+        </table>
       </div>
 
-      <div style="margin-bottom: 50px; page-break-after: always;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">COMMON</h2>
         <p style="text-align: right; font-weight: bold;">Form No. 25</p>
         <p style="text-align: center;">[under the Bye-Law No. 38(e)(xi)]</p>
@@ -825,20 +889,24 @@ export const commonFormTemplate = (data) => {
         
         <p style="margin-top: 40px;">${sProSubj} <strong>${sellerName}</strong>, a ${sMember} of <strong>${data.propertyAddress || "(Full Property Address)"}</strong>, in the building of the Society and intending to transfer to <strong>${purchaserName}</strong>, intending ${pMember} of the society, hereby declare that ${sProSubj} do not hold any vacant land with a building thereon, anywhere in urban agglomeration, mentioned in the Urban Land (ceiling and Regulation) Act, 1976, the area of which, exceeds 38.88 Sq. Mtrs. Built up Area.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 80px;">
-          <div>
-            <p>PLACE : _________________</p>
-            <p>DATE : _________________</p>
-          </div>
-          <div style="text-align: center;">
-            <p>Signature of the ${sTransferor}</p>
-            <br><br><br>
-            <p><strong>${sellerName}</strong></p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 80px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>PLACE : _________________</p>
+              <p>DATE : _________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <p>Signature of the ${sTransferor}</p>
+              <br><br><br>
+              <p><strong>${sellerName}</strong></p>
+            </td>
+          </tr>
+        </table>
       </div>
 
-      <div style="margin-bottom: 50px;">
+      <br clear="all" style="page-break-before: always;" />
+
+      <div>
         <h2 style="text-align: center; font-size: 18px; margin: 20px 0;">COMMON</h2>
         <p style="text-align: right; font-weight: bold;">Form no 26</p>
         <p style="text-align: center;">[under the Bye-law No.17(b),19A(vii),19C(iv)and 38(e)(xi)]</p>
@@ -847,17 +915,19 @@ export const commonFormTemplate = (data) => {
         
         <p style="margin-top: 40px;">${pProSubj}, <strong>${purchaserName}</strong> Intending ${pMember} of at <strong>${data.propertyAddress || "(Full Property Address)"}</strong>, in the building of the said society hereby declare that ${pProSubj} do not hold any vacant land or land with a building thereon, anywhere in Urban agglomeration, mentioned in the Urban Land (Ceiling and Regulation) Act, 1976, the area of which, exceeds 38.88 Sq. Mtrs. Built up Area.</p>
         
-        <div style="display: flex; justify-content: space-between; margin-top: 80px;">
-          <div>
-            <p>PLACE : Koparkhairane, Navi Mumbai</p>
-            <p>DATE : _________________</p>
-          </div>
-          <div style="text-align: center;">
-            <p>Signature of the ${pTransferee} - Prospective ${capitalize(pMember)}</p>
-            <br><br><br>
-            <p><strong>${purchaserName}</strong></p>
-          </div>
-        </div>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-top: 80px; border-collapse: collapse; border: none;">
+          <tr style="border: none;">
+            <td width="50%" align="left" valign="top" style="border: none;">
+              <p>PLACE : Koparkhairane, Navi Mumbai</p>
+              <p>DATE : _________________</p>
+            </td>
+            <td width="50%" align="center" valign="top" style="border: none;">
+              <p>Signature of the ${pTransferee} - Prospective ${capitalize(pMember)}</p>
+              <br><br><br>
+              <p><strong>${purchaserName}</strong></p>
+            </td>
+          </tr>
+        </table>
       </div>
 
     </div>
