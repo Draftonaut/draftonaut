@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import logo from "../assets/logoblue.png";
-import bgImage from "../assets/agreementbg.webp";
 
 function UploadDocument() {
   const navigate = useNavigate();
@@ -87,89 +86,78 @@ function UploadDocument() {
 
   return (
     <div
-      /* STRICTLY SINGLE SCREEN: h-screen and overflow-hidden disable all page scrolling */
-      className="h-screen w-screen overflow-hidden bg-cover bg-center bg-no-repeat relative bg-slate-50 flex flex-col"
+      /* STRICTLY locks the layout to exactly 100vh and completely hides scrollbars */
+      className="h-screen w-screen overflow-hidden bg-white flex flex-col"
       style={{
-        backgroundImage: `url(${bgImage})`,
         fontFamily: "Futura PT, Futura, sans-serif",
       }}
     >
-      {/* 1. MOBILE HEADER: Untouched. Fixed height, white background, centered logo */}
-      <div className="lg:hidden shrink-0 h-16 sm:h-20 bg-white/95 backdrop-blur-md z-50 flex items-center justify-center border-b border-slate-200">
+      {/* 1. HEADER: Removed bottom padding (pb-1) to pull it closer to the content below */}
+      <header className="shrink-0 w-full flex justify-center items-center pt-4 lg:pt-6 pb-1 z-20">
         <img
           src={logo}
-          alt="LegalTech"
-          className="h-10 sm:h-12 object-contain cursor-pointer"
+          alt="Draftonaut"
+          className="h-15 lg:h-15 object-contain cursor-pointer transition-transform hover:opacity-80"
           onClick={() => navigate("/")}
         />
-      </div>
+      </header>
 
-      {/* 2. DESKTOP LOGO: Perfectly centered above the card, NOT absolute/overlay */}
-      <div className="hidden lg:flex shrink-0 w-full items-center justify-center pt-8 pb-4 relative z-20">
-        <img
-          src={logo}
-          alt="LegalTech"
-          className="h-16 xl:h-20 object-contain drop-shadow-md cursor-pointer transition-transform hover:scale-105"
-          onClick={() => navigate("/")}
-        />
-      </div>
-
-      {/* 3. MAIN CONTENT WRAPPER: Perfectly centered below the logo on desktop, full height on mobile */}
-      <div className="flex-1 min-h-0 w-full flex justify-center items-center p-4 lg:px-10 lg:pb-10 relative z-10">
-        {/* PREMIUM CONTAINER CARD: Matches exactly to screen dimensions minus padding, sharp corners */}
-        <div className="w-full h-full max-w-6xl bg-white/95 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-none flex flex-col p-5 lg:p-8">
-          {/* HEADER ROW */}
-          <div className="shrink-0 border-b border-slate-200 pb-4 mb-4 text-center lg:text-left">
-            <div className="inline-flex items-center justify-center px-3 py-1 mb-2 bg-blue-50 border border-blue-100 text-[#0269ff] text-[10px] font-bold uppercase tracking-widest rounded-none">
+      {/* 2. MAIN CONTENT WRAPPER: Removed top padding (pt-1) to close the gap to the logo */}
+      <main className="flex-1 min-h-0 w-full flex items-center justify-center px-4 lg:px-6 pt-1 pb-4 lg:pb-6 z-10">
+        {/* INNER CONTAINER: Fills main height exactly, flex-col layout */}
+        <div className="w-full max-w-5xl h-full flex flex-col">
+          {/* HEADER TEXT: Reduced bottom margin to save vertical space */}
+          <div className="shrink-0 text-center mb-3 lg:mb-5">
+            <div className="inline-flex items-center justify-center px-4 py-1 mb-2 bg-blue-50 text-[#0269ff] text-[10px] font-bold uppercase tracking-widest">
               AI Powered Extraction
             </div>
             <h1 className="text-xl lg:text-3xl font-bold text-slate-800 tracking-tight">
               Upload Previous Agreement
             </h1>
-            <p className="hidden sm:block text-xs lg:text-sm text-slate-500 mt-1">
+            <p className="text-xs lg:text-sm text-slate-500 mt-1 max-w-xl mx-auto hidden sm:block">
               Provide your existing document, and our AI will automatically
               extract the necessary legal clauses and data.
             </p>
           </div>
 
           {/* ================= SPLIT CONTENT AREA ================= */}
-          {/* min-h-0 ensures this grid shrinks perfectly to fit inside the screen without scrolling */}
-          <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-4 lg:gap-8">
+          {/* This area scales dynamically based on available screen height */}
+          <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-6 lg:gap-10 items-stretch">
             {/* LEFT COLUMN: UPLOAD SECTION */}
             <section className="flex-1 min-h-0 flex flex-col">
               <div className="shrink-0 flex items-center justify-between mb-3">
-                <h2 className="text-sm lg:text-base font-bold text-slate-800 flex items-center gap-2">
-                  <span className="w-5 h-5 bg-[#0269ff] text-white flex items-center justify-center text-[10px] rounded-none">
+                <h2 className="text-xs lg:text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <span className="w-5 h-5 bg-[#0269ff] text-white flex items-center justify-center text-[10px]">
                     1
                   </span>
                   Document Upload
                 </h2>
               </div>
 
-              {/* Drag & Drop Zone */}
+              {/* Drag & Drop Zone: flex-1 allows it to stretch and squash properly */}
               <div
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 className={`
-                  flex-1 min-h-0 relative border-2 border-dashed p-4 flex flex-col items-center justify-center text-center transition-all duration-200 rounded-none bg-slate-50
+                  flex-1 min-h-0 relative border-2 border-dashed p-4 flex flex-col items-center justify-center text-center transition-all duration-200 bg-slate-50/50
                   ${
                     dragActive
-                      ? "border-[#0269ff] bg-blue-50/50 shadow-inner"
-                      : "border-slate-300 hover:border-[#0269ff]/50 hover:bg-slate-50/80"
+                      ? "border-[#0269ff] bg-blue-50/30"
+                      : "border-slate-200 hover:border-[#0269ff]/50"
                   }
                 `}
               >
-                <div className="text-4xl lg:text-5xl mb-2 opacity-80">📁</div>
-                <p className="font-bold text-slate-700 text-sm lg:text-lg tracking-tight">
+                <div className="text-3xl lg:text-4xl mb-2 opacity-80">📁</div>
+                <p className="font-bold text-slate-700 text-sm lg:text-base tracking-tight">
                   Drag & Drop Files Here
                 </p>
-                <p className="text-[10px] font-semibold text-slate-400 mt-1 uppercase tracking-widest">
+                <p className="text-[9px] lg:text-[10px] font-semibold text-slate-400 mt-1 uppercase tracking-widest">
                   PDF, DOC, DOCX, JPG, PNG
                 </p>
 
-                <div className="mt-4 lg:mt-6 shrink-0">
-                  <label className="cursor-pointer inline-flex items-center justify-center px-6 py-2 bg-white border border-slate-300 text-slate-700 text-xs font-bold uppercase tracking-wider hover:bg-slate-50 hover:text-[#0269ff] hover:border-[#0269ff] transition-all rounded-none shadow-sm">
+                <div className="mt-4 shrink-0">
+                  <label className="cursor-pointer inline-flex items-center justify-center px-6 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-bold uppercase tracking-wider hover:text-[#0269ff] hover:border-[#0269ff] transition-all shadow-sm">
                     Browse Files
                     <input
                       type="file"
@@ -181,35 +169,32 @@ function UploadDocument() {
                 </div>
               </div>
 
-              {/* Selected File Details / Supported Features */}
-              <div className="shrink-0 mt-3 lg:mt-4 h-15 lg:h-18">
+              {/* Selected File Details */}
+              <div className="shrink-0 mt-3 h-14 lg:h-16 w-full">
                 {file ? (
-                  <div className="h-full p-3 lg:p-4 bg-[#0269ff]/5 border border-[#0269ff]/20 rounded-none animate-fade-in flex items-center justify-between">
-                    <div className="pr-4 overflow-hidden">
-                      <p className="font-bold text-[#0269ff] text-xs lg:text-sm truncate">
+                  <div className="h-full p-3 bg-[#0269ff]/5 border border-[#0269ff]/20 animate-fade-in flex items-center justify-between">
+                    <div className="pr-3 overflow-hidden">
+                      <p className="font-bold text-[#0269ff] text-xs truncate">
                         {file.name}
                       </p>
-                      <p className="text-[10px] font-semibold text-slate-500 mt-0.5 uppercase tracking-wider">
+                      <p className="text-[9px] font-semibold text-slate-500 mt-0.5 uppercase tracking-wider">
                         {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
-                    <div className="text-green-600 bg-green-50 px-2 lg:px-3 py-1 border border-green-200 text-[9px] lg:text-[10px] font-bold uppercase tracking-widest rounded-none shrink-0">
+                    <div className="text-green-600 bg-green-50 px-2 py-1 text-[9px] font-bold uppercase tracking-widest shrink-0">
                       Ready
                     </div>
                   </div>
                 ) : (
-                  <div className="h-full grid grid-cols-2 gap-2 text-[9px] lg:text-[10px] font-bold text-slate-500 uppercase tracking-wider bg-slate-100/50 p-2 lg:p-3 border border-slate-200 rounded-none items-center">
-                    <p className="flex items-center gap-1.5 truncate">
+                  <div className="h-full flex items-center justify-center gap-4 text-[9px] lg:text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <p className="flex items-center gap-1.5">
                       <span className="text-[#0269ff]">✔</span> PDF
                     </p>
-                    <p className="flex items-center gap-1.5 truncate">
+                    <p className="flex items-center gap-1.5">
                       <span className="text-[#0269ff]">✔</span> Word
                     </p>
-                    <p className="flex items-center gap-1.5 truncate">
+                    <p className="flex items-center gap-1.5">
                       <span className="text-[#0269ff]">✔</span> Images
-                    </p>
-                    <p className="flex items-center gap-1.5 truncate">
-                      <span className="text-[#0269ff]">✔</span> OCR
                     </p>
                   </div>
                 )}
@@ -218,21 +203,22 @@ function UploadDocument() {
 
             {/* RIGHT COLUMN: PREVIEW SECTION */}
             <section className="flex-1 min-h-0 flex flex-col">
-              <div className="shrink-0 flex items-center justify-between mb-3 lg:pt-0 pt-3 border-t border-slate-200 lg:border-none">
-                <h2 className="text-sm lg:text-base font-bold text-slate-800 flex items-center gap-2">
-                  <span className="w-5 h-5 bg-[#0269ff] text-white flex items-center justify-center text-[10px] rounded-none">
+              <div className="shrink-0 flex items-center justify-between mb-3 lg:pt-0 pt-4 border-t border-slate-100 lg:border-none">
+                <h2 className="text-xs lg:text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <span className="w-5 h-5 bg-[#0269ff] text-white flex items-center justify-center text-[10px]">
                     2
                   </span>
                   Document Preview
                 </h2>
               </div>
 
-              {/* Preview Box: Takes exact remaining height of this column */}
-              <div className="flex-1 min-h-0 border border-slate-200 bg-slate-100/50 overflow-hidden relative rounded-none flex items-center justify-center">
+              {/* Preview Box: Fully flexible */}
+              <div className="flex-1 min-h-0 relative flex flex-col items-center justify-center">
+                {/* No File State */}
                 {!file && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 p-4 text-center">
                     <svg
-                      className="w-10 h-10 mb-2 text-slate-300"
+                      className="w-10 h-10 mb-2 text-slate-200"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -244,8 +230,8 @@ function UploadDocument() {
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                       />
                     </svg>
-                    <p className="text-[10px] lg:text-xs font-bold uppercase tracking-widest text-slate-400">
-                      No Document Selected
+                    <p className="text-[10px] lg:text-xs font-bold uppercase tracking-widest text-slate-300">
+                      Preview Area
                     </p>
                   </div>
                 )}
@@ -255,7 +241,7 @@ function UploadDocument() {
                   <iframe
                     src={previewUrl}
                     title="PDF Preview"
-                    className="w-full h-full animate-fade-in border-none"
+                    className="w-full h-full animate-fade-in border-none bg-slate-50/50"
                   />
                 )}
 
@@ -264,22 +250,20 @@ function UploadDocument() {
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="w-full h-full object-contain p-2 animate-fade-in"
+                    className="w-full h-full object-contain animate-fade-in"
                   />
                 )}
 
                 {/* DOC/DOCX Fallback */}
                 {(file?.name?.endsWith(".doc") ||
                   file?.name?.endsWith(".docx")) && (
-                  <div className="h-full w-full flex flex-col items-center justify-center text-slate-500 animate-fade-in bg-white">
-                    <div className="text-5xl lg:text-7xl mb-2 lg:mb-4 text-[#0269ff]">
-                      📝
-                    </div>
-                    <p className="font-bold text-slate-700 text-sm lg:text-lg px-4 text-center truncate w-full">
+                  <div className="h-full w-full flex flex-col items-center justify-center text-slate-500 animate-fade-in">
+                    <div className="text-5xl lg:text-7xl mb-3">📄</div>
+                    <p className="font-bold text-slate-800 text-xs lg:text-sm px-4 text-center truncate w-full max-w-sm">
                       {file.name}
                     </p>
-                    <p className="mt-2 text-[9px] lg:text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-100 px-3 py-1.5 rounded-none">
-                      Visual preview unavailable
+                    <p className="mt-2 text-[9px] font-bold uppercase tracking-widest text-slate-400">
+                      Visual preview unavailable for Word Docs
                     </p>
                   </div>
                 )}
@@ -288,9 +272,9 @@ function UploadDocument() {
           </div>
 
           {/* ================= FOOTER BUTTON ================= */}
-          <div className="shrink-0 flex items-center justify-between mt-4 lg:mt-6 pt-4 lg:pt-6 border-t border-slate-200">
+          <div className="shrink-0 mt-4 lg:mt-6 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="hidden sm:flex flex-col">
-              <span className="text-[9px] lg:text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+              <span className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">
                 Step 2 of 2
               </span>
               <span className="text-xs lg:text-sm font-semibold text-slate-800">
@@ -302,10 +286,10 @@ function UploadDocument() {
               onClick={uploadFile}
               disabled={loading || !file}
               className={`
-                w-full sm:w-auto h-10 lg:h-12 px-6 lg:px-8 text-xs lg:text-sm font-bold tracking-widest uppercase shadow-lg transition-all duration-200 flex justify-center items-center gap-2 lg:gap-3 rounded-none
+                w-full sm:w-auto h-10 lg:h-12 px-6 lg:px-8 text-xs font-bold tracking-widest uppercase shadow-md transition-all duration-200 flex justify-center items-center gap-2 lg:gap-3
                 ${
                   loading || !file
-                    ? "bg-slate-300 text-slate-500 shadow-none cursor-not-allowed"
+                    ? "bg-slate-200 text-slate-400 shadow-none cursor-not-allowed"
                     : "bg-[#0269ff] text-white hover:bg-[#0256d6] shadow-[#0269ff]/30 hover:shadow-[#0269ff]/50 hover:-translate-y-0.5"
                 }
               `}
@@ -313,7 +297,7 @@ function UploadDocument() {
               {loading ? (
                 <>
                   <svg
-                    className="animate-spin h-4 w-4 text-white"
+                    className="animate-spin h-3.5 w-3.5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -338,7 +322,7 @@ function UploadDocument() {
                 <>
                   Extract Information
                   <svg
-                    className="w-3.5 h-3.5 lg:w-4 lg:h-4"
+                    className="w-3.5 h-3.5"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -355,11 +339,11 @@ function UploadDocument() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
 
       <style jsx="true">{`
         .animate-fade-in {
-          animation: fadeIn 0.4s ease-out;
+          animation: fadeIn 0.3s ease-out;
         }
         @keyframes fadeIn {
           from {

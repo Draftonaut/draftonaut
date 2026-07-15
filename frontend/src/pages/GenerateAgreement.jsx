@@ -493,6 +493,8 @@ function GenerateAgreement() {
     const loanBankName =
       data.property?.loanBankName || "any Bank/Financial Institution";
 
+    // SHARE CERTIFICATE VARIABLES
+    const isShareCertIssued = data.property?.isShareCertificateIssued !== false;
     const certNo = data.property?.shareCertificateNumber || "_____";
     const certFrom = data.property?.shareDistinctiveNumberFrom || "_____";
     const certTo = data.property?.shareDistinctiveNumberTo || "_____";
@@ -550,6 +552,41 @@ function GenerateAgreement() {
 
     paymentSubClauses += `<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">${String.fromCharCode(subChar)}). On receipt of full and final consideration of the sale price, the ${transferorWord} shall hand over all Original Documents in respect of the premises to the ${transfereeWord}.</p>`;
 
+    // =========================================================================
+    // DYNAMIC CLAUSE GENERATION (ISSUED VS NOT ISSUED)
+    // =========================================================================
+
+    // POINT 14 - BACKGROUND CLAUSE
+    const whereasClause14 = isShareCertIssued
+      ? `<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">14. AND WHEREAS the ${transferorWord} is the member of the Society and holds Share Certificate No. <strong>${certNo}</strong> comprising of 5 Shares of face value of Rs. 50/- each bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong> and by virtue of ${sellerPronoun} membership of the said Society is seized and possessed of or otherwise well and sufficiently entitled to the said Flat. The said Plot is more particularly described in the Schedule–I hereunder and the said Flat/Premises is more particularly described in the Schedule–II hereunder.</p>`
+      : `<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">14. AND WHEREAS the ${transferorWord} is the member of the Society and holds Share Certificate (yet to be issued by the Society) and by virtue of ${sellerPronoun} membership of the said Society is seized and possessed of or otherwise well and sufficiently entitled to the said Flat. The said Plot is more particularly described in the Schedule–I hereunder and the said Flat/Premises is more particularly described in the Schedule–II hereunder.</p>`;
+
+    // POINT 2 - TRANSFER AGREEMENT
+    const witnessethPoint2 = isShareCertIssued
+      ? `<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">2. The ${transferorWord} ${sellerAgree} to convey and transfer and the ${transfereeWord} ${purchaserAgree} to purchase the aforesaid Flat and five Shares of Rs.50/- each, bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong>, under Share Certificate No. <strong>${certNo}</strong>, issued by the said Society in favour of the ${transferorWord} TOGETHER WITH ${sellerPronoun} occupancy and other rights, title and interest in the said Premises in the said Society and other incidental rights and benefits, free from all encumbrances and liabilities, for a consideration of <strong>${considerationText}</strong> payable by the ${transfereeWord} to the ${transferorWord}.</p>`
+      : `<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">2. The ${transferorWord} ${sellerAgree} to convey and transfer and the ${transfereeWord} ${purchaserAgree} to purchase the aforesaid Flat and five/ten Shares of Rs.50/- each, to be issued by the said Society in favour of the ${transferorWord} TOGETHER WITH ${sellerPronoun} occupancy and other rights, title and interest in the said Premises in the said Society and other incidental rights and benefits, free from all encumbrances and liabilities, for a consideration of <strong>${considerationText}</strong> payable by the ${transfereeWord} to the ${transferorWord}.</p>`;
+
+    // POINT 5 - HANDOVER SUB-CLAUSES
+    let point5Clauses = "";
+    if (isShareCertIssued) {
+      point5Clauses = `
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">a). Shall hand over to the ${transfereeWord} the original Share Certificate No. <strong>${certNo}</strong>, comprising of five shares of Rs. 50/- each bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong>.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 25px;">b). Shall hand over to the ${transfereeWord}, the transfer forms duly signed by the ${transferorWord} as regards the transfer of the said five shares of Rs.50/- each, bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong>, under Share Certificate No. <strong>${certNo}</strong>, issued by the said Society and all other necessary papers, letters and documents, required for effectively transferring the said five Shares, by the ${transferorWord} to the ${transfereeWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 25px;">c). Shall surrender ${sellerPronoun} occupancy rights, in respect of the said Flat in favour of the ${transfereeWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">d). Shall cause the said Society to allow to occupy the said Flat by the ${transfereeWord} in place and stead of the ${transferorWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">e). Shall tender ${sellerPronoun} ${sellerResignation} as the ${sellerMember} of the said Society.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">f). Shall cause the said Society to enroll the ${transfereeWord} as the ${purchaserMember} of the said Society in place and stead of the ${transferorWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">g). Shall cause the said Society to transfer all the deposits lying with the said Society in the name of the ${transferorWord} to and in favour of the ${transfereeWord} in the records of the said Society.</p>`;
+    } else {
+      point5Clauses = `
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">a). Shall hand over to the ${transfereeWord}, the transfer forms duly signed by the ${transferorWord} as regards the transfer of the said five/ten shares of Rs.50/- each, to be issued by the said Society and all other necessary papers, letters and documents, required for effectively transferring the said five/ten Shares, by the ${transferorWord} to the ${transfereeWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 25px;">b). Shall surrender ${sellerPronoun} occupancy rights, in respect of the said Flat in favour of the ${transfereeWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">c). Shall cause the said Society to allow to occupy the said Flat by the ${transfereeWord} in place and stead of the ${transferorWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">d). Shall tender ${sellerPronoun} ${sellerResignation} as the ${sellerMember} of the said Society.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">e). Shall cause the said Society to enroll the ${transfereeWord} as the ${purchaserMember} of the said Society in place and stead of the ${transferorWord}.</p>
+<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">f). Shall cause the said Society to transfer all the deposits lying with the said Society in the name of the ${transferorWord} to and in favour of the ${transfereeWord} in the records of the said Society.</p>`;
+    }
+
     const finalAgreement = `
 <p style="text-align: center; font-weight: bold; font-size: 14pt; text-decoration: underline; margin-bottom: 25px;">AGREEMENT FOR SALE</p>
 <p style="text-align: center; font-size: 14pt; line-height: 1.5; margin-bottom: 25px;"><Strong style="font-weight: bold;">THIS AGREEMENT IS  </strong> made and entered into at __________, Navi Mumbai, on ${data.property?.agreementDate || "[DATE]"}</p>
@@ -571,6 +608,8 @@ function GenerateAgreement() {
 
 ${formattedHistory}
 
+${whereasClause14}
+
 <p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">15. AND WHEREAS the said premises is in occupation and possession of the ${transferorWord}, subject to the bye-laws rules and regulations of the said Society.</p>
 
 <p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">16. AND WHEREAS the ${transferorWord} ${sellerIs} desirous of transferring the shares of the said Society together with the occupancy and other rights, title and interest and incidental rights, benefits in the said premises in the said Society to the ${transfereeWord}, free from all encumbrances and liabilities, on the basis of ‘AS IS WHERE IS’ alongwith the amounts standing to the credit of the ${transferorWord}, on this day in the books of the said Society towards the deposits, stocks, bonds, sinking fund, dividends and any other amounts to which the ${transferorWord} is legitimately entitled to in ${sellerPronoun} capacity as the ${sellerMember} of the said Society.</p>
@@ -585,7 +624,7 @@ ${formattedHistory}
 
 <p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">1.  The ${transferorWord} ${sellerHave} already applied to the Society for transferring the said Flat No. <strong> ${data.property?.flatNumber || ""},</strong> on the  _____Floor, and the said Shares, and other documents, such as; No Objection Certificate in the name of the ${transfereeWord}.  The said Society has also granted No Objection Certificate for transferring the said Flat and the said Share Certificate in the name of the ${transfereeWord}</p>
 
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">2. The ${transferorWord} ${sellerAgree} to convey and transfer and the ${transfereeWord} ${purchaserAgree} to purchase the aforesaid Flat and five Shares of Rs.50/- each, bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong>, under Share Certificate No. <strong>${certNo}</strong>, issued by the said Society in favour of the ${transferorWord} TOGETHER WITH ${sellerPronoun} occupancy and other rights,  title  and  interest  in the said Premises in the said Society and other incidental rights and benefits, free from all encumbrances and liabilities, for a consideration of <strong>${considerationText}</strong> payable by the ${transfereeWord} to the ${transferorWord}</p>
+${witnessethPoint2}
 
 <p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">3. The ${transfereeWord} shall pay to the ${transferorWord} the said sum of <strong>${considerationText}</strong> in the manner and at the time as hereinafter stated;-</p>
 
@@ -595,19 +634,7 @@ ${paymentSubClauses}
 
 <p style="text-align: justify; font-weight: bold; text-decoration: underline; line-height: 1.5; margin-bottom: 15px;">5. Upon the receipt of the consideration moneys referred to hereinabove the ${transferorWord}:-</p>
 
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">a). Shall hand over to the ${transfereeWord} the original Share Certificate No. <strong>${certNo}</strong>, comprising of five shares of Rs. 50/- each bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong>.</p>
-
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 25px;">b). Shall hand over to the ${transfereeWord}, the transfer forms duly signed by the ${transferorWord} as regards the transfer of the said five shares of Rs.50/- each, bearing distinctive numbers from <strong>${certFrom}</strong> to <strong>${certTo}</strong>, under Share Certificate No. <strong>${certNo}</strong>, issued by the said Society and all other necessary papers, letters and documents, required for effectively transferring the said five Shares, by the ${transferorWord} to the ${transfereeWord}.</p>
-
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 25px;">c). Shall surrender ${sellerPronoun} occupancy rights, in respect of the said Flat in favour of the ${transfereeWord}.</p>
-
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">d). Shall cause the said Society to allow to occupy the said Flat by the ${transfereeWord} in place and stead of the ${transferorWord}.</p>
-
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">e). Shall tender ${sellerPronoun} ${sellerResignation} as the ${sellerMember} of the said Society.</p>
-
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">f). Shall cause the said Society to enroll the ${transfereeWord} as the ${purchaserMember} of the said Society in place and stead of the ${transferorWord}.</p>
-
-<p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">g). Shall cause the said Society to transfer all the deposits lying with the said Society in the name of the ${transferorWord} to and in favour of the ${transfereeWord} in the records of the said Society. </p>
+${point5Clauses}
 
 <p style="text-align: justify; line-height: 1.5; margin-bottom: 15px;">6. As incidental to the transfer of the said shares, the ${transferorWord} shall also transfer to the ${transfereeWord}, ${sellerPronoun} occupancy rights, in respect of the said Premises & other incidental rights & benefits in respect thereof.</p>
 

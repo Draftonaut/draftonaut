@@ -98,7 +98,7 @@ function Navbar({ onMyWorkClick }) {
             ) : (
               <button
                 onClick={handleLogin}
-                className="bg-blue-600 text-white px-6 py-2 font-semibold hover:bg-blue-700 transition rounded-none"
+                className="bg-blue-600 text-white px-6 py-2 font-semibold hover:bg-blue-700 transition rounded-md"
               >
                 Login
               </button>
@@ -272,7 +272,7 @@ function Dashboard() {
               onClick={() =>
                 handleProtectedAction(() => navigate("/new-agreement"))
               }
-              className="bg-white/10 backdrop-blur-md border border-white/60 text-white md:border-blue-600 md:text-blue-600 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-none hover:bg-white/20 md:hover:bg-blue-600/10 transition-all duration-300"
+              className="bg-white/10 backdrop-blur-md border border-white/60 text-white md:border-blue-600 md:text-blue-600 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-md hover:bg-white/20 md:hover:bg-blue-600/10 transition-all duration-300"
             >
               Create New Agreement
             </button>
@@ -282,7 +282,7 @@ function Dashboard() {
               onClick={() =>
                 handleProtectedAction(() => navigate("/all-documents"))
               }
-              className="bg-white/10 backdrop-blur-md border border-blue-400 text-blue-400 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-none hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300"
+              className="bg-white/10 backdrop-blur-md border border-blue-400 text-blue-400 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-md hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300"
             >
               Other Documents
             </button>

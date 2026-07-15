@@ -102,7 +102,7 @@ const InputField = ({
         readOnly={readOnly}
         className={`w-full h-11 px-4 text-sm border text-slate-800 outline-none rounded-none transition-all duration-200 ${
           readOnly
-            ? "bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed font-semibold"
+            ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed font-semibold"
             : "bg-slate-50 border-slate-200 focus:bg-white focus:border-[#0269ff] focus:ring-4 focus:ring-[#0269ff]/10 hover:border-slate-300"
         }`}
       />
@@ -179,12 +179,13 @@ function NewAgreement() {
     },
   ]);
 
-  // Property details
+  // Property details - Added isShareCertificateIssued
   const [property, setProperty] = useState({
     flatNumber: "",
     buildingName: "",
     fullAddress: "",
     agreementDate: "",
+    isShareCertificateIssued: true, // NEW LOGIC STATE
     shareCertificateNumber: "",
     shareDistinctiveNumberFrom: "",
     shareDistinctiveNumberTo: "",
@@ -356,9 +357,6 @@ function NewAgreement() {
       </div>
 
       {/* 3. RIGHT SIDE: Form Container */}
-      {/* Mobile: starts below header (top-16) and takes remaining height (h-[calc(100%-4rem)]).
-          Desktop: anchors top right, full height, exactly 50% width, with glassmorphism effects.
-      */}
       <div className="absolute top-16 lg:top-0 right-0 w-full lg:w-1/2 h-[calc(100%-4rem)] lg:h-full flex flex-col bg-white lg:bg-white/95 lg:backdrop-blur-md lg:border-l border-white/40 z-10 lg:shadow-[-20px_0_40px_rgba(0,0,0,0.1)]">
         {/* Scrollable Form Area with Custom Scroller */}
         <div className="flex-1 overflow-y-auto p-5 md:p-10 lg:p-12 custom-scrollbar space-y-10 pb-20">
@@ -654,17 +652,64 @@ function NewAgreement() {
                 className="md:col-span-2"
               />
 
-              <div className="md:col-span-2 mt-4 md:mt-6">
-                <h3 className="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 mb-4">
+              {/* ================= SHARE CERTIFICATE LOGIC HERE ================= */}
+              <div className="md:col-span-2 mt-4 md:mt-6 border-b border-slate-200 pb-4 mb-2">
+                <h3 className="text-sm font-bold text-slate-800 mb-4">
                   Share Certificate Details
                 </h3>
+
+                {/* NEW RADIO BUTTON TOGGLE */}
+                <div className="flex gap-6 mb-2">
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="radio"
+                      name="shareCertStatus"
+                      checked={property.isShareCertificateIssued === true}
+                      onChange={() =>
+                        setProperty({
+                          ...property,
+                          isShareCertificateIssued: true,
+                        })
+                      }
+                      className="w-4 h-4 accent-[#0269ff] cursor-pointer"
+                    />
+                    <span className="text-sm text-slate-700 font-semibold group-hover:text-[#0269ff] transition-colors">
+                      Issued
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer group">
+                    <input
+                      type="radio"
+                      name="shareCertStatus"
+                      checked={property.isShareCertificateIssued === false}
+                      onChange={() =>
+                        setProperty({
+                          ...property,
+                          isShareCertificateIssued: false,
+                          shareCertificateNumber: "",
+                          shareDistinctiveNumberFrom: "",
+                          shareDistinctiveNumberTo: "",
+                        })
+                      }
+                      className="w-4 h-4 accent-[#0269ff] cursor-pointer"
+                    />
+                    <span className="text-sm text-slate-700 font-semibold group-hover:text-[#0269ff] transition-colors">
+                      Not Issued
+                    </span>
+                  </label>
+                </div>
               </div>
 
+              {/* DYNAMIC READ-ONLY INPUTS based on the toggle */}
               <InputField
                 label="Share Certificate Number"
                 name="shareCertificateNumber"
                 value={property.shareCertificateNumber}
                 onChange={handlePropertyChange}
+                readOnly={!property.isShareCertificateIssued}
+                placeholder={
+                  !property.isShareCertificateIssued ? "N/A (Not Issued)" : ""
+                }
               />
 
               <InputField
@@ -672,6 +717,10 @@ function NewAgreement() {
                 name="shareDistinctiveNumberFrom"
                 value={property.shareDistinctiveNumberFrom}
                 onChange={handlePropertyChange}
+                readOnly={!property.isShareCertificateIssued}
+                placeholder={
+                  !property.isShareCertificateIssued ? "N/A (Not Issued)" : ""
+                }
               />
 
               <InputField
@@ -679,6 +728,10 @@ function NewAgreement() {
                 name="shareDistinctiveNumberTo"
                 value={property.shareDistinctiveNumberTo}
                 onChange={handlePropertyChange}
+                readOnly={!property.isShareCertificateIssued}
+                placeholder={
+                  !property.isShareCertificateIssued ? "N/A (Not Issued)" : ""
+                }
               />
 
               <div className="md:col-span-2 mt-4 md:mt-6">
