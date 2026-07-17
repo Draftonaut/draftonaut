@@ -271,7 +271,7 @@ function DocumentGenerator() {
             <img
               src={logo}
               alt="Logo"
-              className="h-12 md:h-16 object-contain"
+              className="h-15 md:h-16 object-contain"
             />
           </div>
 
