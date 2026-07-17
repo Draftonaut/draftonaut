@@ -261,7 +261,7 @@ function Dashboard() {
             }
           />
 
-          <div className="fixed bottom-37 left-4 md:bottom-45 md:left-21 flex gap-2 md:gap-4 z-40">
+          <div className="fixed bottom-32 left-4 md:bottom-45 md:left-21 flex gap-2 md:gap-4 z-40">
             {/* UPDATED: This now navigates to the Selection Page! */}
             <button
               onClick={() =>
