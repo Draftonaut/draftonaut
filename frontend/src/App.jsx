@@ -167,7 +167,7 @@ function App() {
           }
         />
 
-        {/* Declaration / Indemnity / Common Form Generator */}
+        {/* Declaration / Indemnity / Common Form Generator - FIXED ROUTING */}
         <Route
           path="/document-generator"
           element={

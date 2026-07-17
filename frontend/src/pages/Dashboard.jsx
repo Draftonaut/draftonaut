@@ -222,7 +222,6 @@ function Dashboard() {
     }
   };
 
-  // NEW: Wrapper function to enforce login before executing an action
   const handleProtectedAction = (actionCallback) => {
     if (!auth.currentUser) {
       navigate("/login");
@@ -233,7 +232,6 @@ function Dashboard() {
 
   return (
     <>
-      {/* Hides scrollbar globally for this component */}
       <style>
         {`
           .hide-scrollbar::-webkit-scrollbar {
@@ -247,7 +245,6 @@ function Dashboard() {
       </style>
 
       <div className="h-screen w-full overflow-y-auto hide-scrollbar relative">
-        {/* FIXED BACKGROUND DIV */}
         <div
           className="fixed inset-0 z-[-1]"
           style={{
@@ -258,33 +255,21 @@ function Dashboard() {
         />
 
         <div className="min-h-[120vh]">
-          {/* UPDATED: Pass the protected action to Navbar so "My Work" requires login */}
           <Navbar
             onMyWorkClick={() =>
               handleProtectedAction(() => setShowPopup(true))
             }
           />
 
-          {/* Fixed Glassmorphism Buttons */}
           <div className="fixed bottom-24 left-4 md:bottom-45 md:left-21 flex gap-2 md:gap-4 z-40">
-            {/* UPDATED: Wrap navigate in protected action */}
-            <button
-              onClick={() =>
-                handleProtectedAction(() => navigate("/new-agreement"))
-              }
-              className="bg-white/10 backdrop-blur-md border border-white/60 text-white md:border-blue-600 md:text-blue-600 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-md hover:bg-white/20 md:hover:bg-blue-600/10 transition-all duration-300"
-            >
-              Create New Agreement
-            </button>
-
-            {/* UPDATED: Wrap navigate in protected action */}
+            {/* UPDATED: This now navigates to the Selection Page! */}
             <button
               onClick={() =>
                 handleProtectedAction(() => navigate("/all-documents"))
               }
-              className="bg-white/10 backdrop-blur-md border border-blue-400 text-blue-400 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-md hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-300"
+              className="bg-white/10 backdrop-blur-md border border-white/60 text-white md:border-blue-600 md:text-blue-600 px-4 py-2 text-xs md:text-base md:px-8 md:py-3 font-semibold rounded-md hover:bg-white/20 md:hover:bg-blue-600/10 transition-all duration-300"
             >
-              Other Documents
+              Start Drafting
             </button>
           </div>
         </div>
