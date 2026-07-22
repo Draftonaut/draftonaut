@@ -27,6 +27,10 @@ import DocumentPreview from "./pages/DocumentPreview";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 
+// NEW: Imported the MOU Form and MOU Template
+import Mou from "./pages/MouInputForm";
+import MouTemplate from "./templates/MouTemplate"; // <--- ADDED MOU TEMPLATE
+
 // =====================================
 // PROTECTED ROUTE COMPONENT
 // =====================================
@@ -182,6 +186,26 @@ function App() {
           element={
             <ProtectedRoute>
               <DocumentPreview />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* NEW: MOU Document Form Route */}
+        <Route
+          path="/mou"
+          element={
+            <ProtectedRoute>
+              <Mou />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* NEW: MOU Template Preview Route */}
+        <Route
+          path="/mou-preview"
+          element={
+            <ProtectedRoute>
+              <MouTemplate />
             </ProtectedRoute>
           }
         />
