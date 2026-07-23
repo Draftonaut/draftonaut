@@ -4,8 +4,10 @@ import logo from "../assets/logoblue.png";
 import bgImage from "../assets/formbg.webp";
 
 // =========================================================================
-// DATE FORMATTER ENGINE
+// DATE FORMATTER ENGINES (Used for generating the final document)
 // =========================================================================
+
+// Execution Date format (e.g. 20th day of July 2026)
 const formatLegalDate = (dateString) => {
   if (!dateString) return "";
   const [year, month, day] = dateString.split("-");
@@ -27,7 +29,15 @@ const formatLegalDate = (dateString) => {
         return "th";
     }
   };
-  return `${dayNum}${getOrdinalSuffix(dayNum)} day of ${monthName}, ${yearNum}`;
+  return `${dayNum}${getOrdinalSuffix(dayNum)} day of ${monthName} ${yearNum}`;
+};
+
+// Payment Date format (e.g. 29.03.2026)
+const formatPaymentDate = (dateString) => {
+  if (!dateString) return "";
+  const [year, month, day] = dateString.split("-");
+  if (!year || !month || !day) return dateString;
+  return `${day}.${month}.${year}`;
 };
 
 // =========================================================================
@@ -103,7 +113,7 @@ const convertNumberToWords = (amount) => {
 };
 
 // =========================================================================
-// 1. REUSABLE PREMIUM INPUT COMPONENTS (SHARP CORNERS)
+// 1. REUSABLE PREMIUM INPUT COMPONENTS
 // =========================================================================
 const InputField = ({
   label,
@@ -115,45 +125,8 @@ const InputField = ({
   className = "",
   readOnly = false,
   isLegalDate = false,
+  isPaymentDate = false,
 }) => {
-  if (type === "date" && isLegalDate) {
-    return (
-      <div className={className}>
-        <label className="block mb-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-          {label}
-        </label>
-        <div className="relative">
-          <input
-            type="text"
-            value={formatLegalDate(value) || ""}
-            readOnly
-            placeholder="Select a date..."
-            className="w-full h-11 px-4 text-sm border border-slate-200 bg-slate-50 text-slate-800 outline-none rounded-none cursor-pointer focus:bg-white focus:border-[#0269ff] transition-all duration-200"
-          />
-          <svg
-            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#0269ff] pointer-events-none"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-            />
-          </svg>
-          <input
-            type="date"
-            name={name}
-            value={value}
-            onChange={onChange}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          />
-        </div>
-      </div>
-    );
-  }
   return (
     <div className={className}>
       <label className="block mb-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -166,8 +139,19 @@ const InputField = ({
         onChange={onChange}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`w-full h-11 px-4 text-sm border text-slate-800 outline-none rounded-none transition-all duration-200 ${readOnly ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed font-semibold" : "bg-slate-50 border-slate-200 focus:bg-white focus:border-[#0269ff] focus:ring-4 focus:ring-[#0269ff]/10 hover:border-slate-300"}`}
+        className={`w-full h-11 px-4 text-sm border text-slate-800 outline-none rounded-none transition-all duration-200 ${readOnly ? "bg-slate-100 border-slate-200 text-slate-400 cursor-not-allowed font-semibold" : "bg-slate-50 border-slate-200 focus:bg-white focus:border-[#0269ff] focus:ring-4 focus:ring-[#0269ff]/10 hover:border-slate-300"} ${type === "date" ? "cursor-pointer" : ""}`}
       />
+      {/* Tiny helper to show exactly what will print on the final document without blocking the scroller */}
+      {type === "date" && value && isLegalDate && (
+        <p className="mt-1.5 text-[10px] font-bold text-[#0269ff] tracking-wide">
+          Document Output: {formatLegalDate(value)}
+        </p>
+      )}
+      {type === "date" && value && isPaymentDate && (
+        <p className="mt-1.5 text-[10px] font-bold text-[#0269ff] tracking-wide">
+          Document Output: {formatPaymentDate(value)}
+        </p>
+      )}
     </div>
   );
 };
@@ -250,12 +234,14 @@ function MouInputForm() {
     chequeNo: "",
     chequeDate: "",
     bankName: "",
-    // Sale Deed
-    saleDeedAmount: "",
-    saleDeedAmountWords: "",
-    saleDeedMode: "",
-    saleDeedRefNo: "",
-    saleDeedBank: "",
+    // Full & Final Payment
+    fullFinalAmount: "",
+    fullFinalAmountWords: "",
+    fullFinalMode: "Cheque",
+    fullFinalRefNo: "",
+    fullFinalBank: "",
+    fullFinalDate: "",
+    fullFinalTiming: "After Execution",
     // Loan & TDS
     loanBalanceAmount: "",
     loanBalanceAmountWords: "",
@@ -270,7 +256,7 @@ function MouInputForm() {
 
   // UI Toggles for Add Buttons
   const [showToken, setShowToken] = useState(false);
-  const [showSaleDeed, setShowSaleDeed] = useState(false);
+  const [showFullFinal, setShowFullFinal] = useState(false);
   const [showLoan, setShowLoan] = useState(false);
   const [showBrokerage, setShowBrokerage] = useState(false);
 
@@ -293,13 +279,8 @@ function MouInputForm() {
   });
 
   // --- Automatic Calculations & Logic ---
-  const totalConsiderationNum = Number(financials.totalConsideration) || 0;
   const regConsiderationNum = Number(financials.regConsideration) || 0;
-  const highestValueForTds = Math.max(
-    totalConsiderationNum,
-    regConsiderationNum,
-  );
-  const showTDS = highestValueForTds >= 5000000;
+  const showTDS = regConsiderationNum >= 5000000;
 
   // Dropdown Options arrays
   const loanBankOptions = [
@@ -314,7 +295,8 @@ function MouInputForm() {
     "Union Bank of India",
     "IDBI Bank",
   ];
-  const paymentModeOptions = ["Cheque", "RTGS", "NEFT", "UPI"];
+  const paymentModeOptions = ["Cheque", "RTGS", "NEFT", "UPI", "Cash"];
+  const timingOptions = ["Before Execution", "After Execution"];
 
   // --- Handlers ---
   const handleObjectChange = (e, state, setState) => {
@@ -342,29 +324,21 @@ function MouInputForm() {
       "totalConsideration",
       "regConsideration",
       "tokenAmount",
-      "saleDeedAmount",
+      "fullFinalAmount",
       "loanBalanceAmount",
       "tdsAmount",
     ];
 
+    // Amount in Words conversion
     if (numericFields.includes(name)) {
       updatedFinancials[`${name}Words`] = convertNumberToWords(value);
     }
 
-    // Auto TDS Calculation
-    if (name === "totalConsideration" || name === "regConsideration") {
-      const tempTotal =
-        name === "totalConsideration"
-          ? Number(value)
-          : Number(updatedFinancials.totalConsideration);
-      const tempReg =
-        name === "regConsideration"
-          ? Number(value)
-          : Number(updatedFinancials.regConsideration);
-      const tempHigh = Math.max(tempTotal || 0, tempReg || 0);
-
-      if (tempHigh >= 5000000) {
-        const calcTds = (tempHigh * 0.01).toFixed(0);
+    // TDS Calculation
+    if (name === "regConsideration") {
+      const tempReg = Number(value);
+      if (tempReg >= 5000000) {
+        const calcTds = (tempReg * 0.01).toFixed(0);
         updatedFinancials.tdsAmount = calcTds;
         updatedFinancials.tdsAmountWords = convertNumberToWords(calcTds);
       } else {
@@ -375,11 +349,19 @@ function MouInputForm() {
     setFinancials(updatedFinancials);
   };
 
-  // Dynamic Handlers for Part Payments & Cash Payments
+  // Dynamic Handlers for Part Payments & Cash Payments (Includes Timing & Words)
   const addPartPayment = () =>
     setPartPayments([
       ...partPayments,
-      { amount: "", amountWords: "", mode: "Cheque", refNo: "", bank: "" },
+      {
+        amount: "",
+        amountWords: "",
+        mode: "Cheque",
+        refNo: "",
+        bank: "",
+        date: "",
+        timing: "Before Execution",
+      },
     ]);
   const removePartPayment = (index) =>
     setPartPayments(partPayments.filter((_, i) => i !== index));
@@ -387,21 +369,26 @@ function MouInputForm() {
     const { name, value } = e.target;
     const updated = [...partPayments];
     updated[index][name] = value;
-    if (name === "amount")
+    if (name === "amount") {
       updated[index].amountWords = convertNumberToWords(value);
+    }
     setPartPayments(updated);
   };
 
   const addCashPayment = () =>
-    setCashPayments([...cashPayments, { amount: "", amountWords: "" }]);
+    setCashPayments([
+      ...cashPayments,
+      { amount: "", amountWords: "", date: "", timing: "Before Execution" },
+    ]);
   const removeCashPayment = (index) =>
     setCashPayments(cashPayments.filter((_, i) => i !== index));
   const handleCashPaymentChange = (index, e) => {
     const { name, value } = e.target;
     const updated = [...cashPayments];
     updated[index][name] = value;
-    if (name === "amount")
+    if (name === "amount") {
       updated[index].amountWords = convertNumberToWords(value);
+    }
     setCashPayments(updated);
   };
 
@@ -421,7 +408,6 @@ function MouInputForm() {
       purchasers.length === 1
         ? "TRANSFEREE/PURCHASER"
         : "TRANSFEREES/PURCHASERS";
-
     const sellerInhabitantText =
       sellers.length === 1
         ? "an adult, Indian inhabitant"
@@ -430,6 +416,15 @@ function MouInputForm() {
       purchasers.length === 1
         ? "an adult, Indian inhabitant"
         : "adults, Indian inhabitants";
+
+    const formattedPartPayments = partPayments.map((p) => ({
+      ...p,
+      formattedDate: formatPaymentDate(p.date),
+    }));
+    const formattedCashPayments = cashPayments.map((c) => ({
+      ...c,
+      formattedDate: formatPaymentDate(c.date),
+    }));
 
     const finalData = {
       execution: {
@@ -446,15 +441,16 @@ function MouInputForm() {
       },
       financials: {
         ...financials,
-        formattedChequeDate: formatLegalDate(financials.chequeDate),
+        formattedChequeDate: formatPaymentDate(financials.chequeDate),
+        formattedFullFinalDate: formatPaymentDate(financials.fullFinalDate),
       },
-      partPayments, // <--- Passing the dynamic arrays to template
-      cashPayments,
+      partPayments: formattedPartPayments,
+      cashPayments: formattedCashPayments,
       mortgage,
       brokerage: {
         ...brokerage,
         showBrokerage,
-        formattedDeadline: formatLegalDate(brokerage.completionDeadline),
+        formattedDeadline: formatPaymentDate(brokerage.completionDeadline),
       },
       grammar: {
         sellerTitle,
@@ -640,20 +636,7 @@ function MouInputForm() {
               }
               className="mt-4 px-4 py-2 text-[#0269ff] bg-blue-50 hover:bg-blue-100 text-xs font-bold uppercase tracking-wide transition flex items-center gap-2 rounded-none"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>{" "}
-              Add Another Seller
+              + Add Another Seller
             </button>
           </section>
 
@@ -756,20 +739,7 @@ function MouInputForm() {
               }
               className="mt-4 px-4 py-2 text-[#0269ff] bg-blue-50 hover:bg-blue-100 text-xs font-bold uppercase tracking-wide transition flex items-center gap-2 rounded-none"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>{" "}
-              Add Another Purchaser
+              + Add Another Purchaser
             </button>
           </section>
 
@@ -821,7 +791,6 @@ function MouInputForm() {
             </div>
 
             <div className="space-y-4">
-              {/* Total Consideration */}
               <div className="grid md:grid-cols-2 gap-4 p-4 bg-slate-50 border border-slate-200 rounded-none">
                 <InputField
                   label="Total Consideration Amount (Rs.)"
@@ -859,23 +828,11 @@ function MouInputForm() {
                 />
               </div>
 
-              {/* Auto TDS Display if >= 50L */}
               {showTDS && (
                 <div className="p-4 bg-amber-50 border border-amber-200 shadow-sm rounded-none animate-fade-in grid md:grid-cols-2 gap-4">
                   <div className="md:col-span-2">
                     <h3 className="text-xs font-bold text-amber-600 uppercase tracking-wider flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Auto-Calculated TDS (1% over 50L)
+                      Auto-Calculated TDS (1% of Agreement Value)
                     </h3>
                   </div>
                   <InputField
@@ -896,7 +853,6 @@ function MouInputForm() {
                 </div>
               )}
 
-              {/* Dynamic Add Payment Tranches Buttons */}
               <div className="pt-2 border-t border-slate-200 mt-4">
                 <p className="text-xs font-bold text-slate-500 uppercase mb-2">
                   Add Payment Tranches
@@ -918,13 +874,13 @@ function MouInputForm() {
                   >
                     + Part Payment
                   </button>
-                  {!showSaleDeed && (
+                  {!showFullFinal && (
                     <button
                       type="button"
-                      onClick={() => setShowSaleDeed(true)}
+                      onClick={() => setShowFullFinal(true)}
                       className="px-3 py-1.5 bg-white border border-[#0269ff] text-[#0269ff] text-[10px] font-bold uppercase rounded-none hover:bg-blue-50 transition"
                     >
-                      + Final Sale Deed
+                      + Full & Final Payment
                     </button>
                   )}
                   <button
@@ -946,8 +902,7 @@ function MouInputForm() {
                 </div>
               </div>
 
-              {/* Dynamic Payment Sections Rendered Below */}
-
+              {/* 1. TOKEN */}
               {showToken && (
                 <div className="p-4 bg-white border border-slate-200 shadow-sm rounded-none relative animate-fade-in">
                   <button
@@ -969,9 +924,9 @@ function MouInputForm() {
                     Remove
                   </button>
                   <h3 className="text-xs font-bold text-[#0269ff] mb-4 uppercase tracking-wider">
-                    Token Amount
+                    Token Amount (Before Execution)
                   </h3>
-                  <div className="grid md:grid-cols-3 gap-4">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <InputField
                       label="Amount (Rs.)"
                       name="tokenAmount"
@@ -985,15 +940,25 @@ function MouInputForm() {
                       name="tokenAmountWords"
                       value={financials.tokenAmountWords}
                       onChange={handleFinancialsChange}
-                      className="md:col-span-2 bg-slate-50"
+                      className="bg-slate-50"
                       readOnly
                     />
+                  </div>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4 pt-4 border-t border-slate-100">
                     <SelectField
                       label="Payment Mode"
                       name="tokenMode"
                       value={financials.tokenMode}
                       onChange={handleFinancialsChange}
                       options={paymentModeOptions}
+                    />
+                    <InputField
+                      label="Date"
+                      type="date"
+                      name="chequeDate"
+                      value={financials.chequeDate}
+                      onChange={handleFinancialsChange}
+                      isPaymentDate={true}
                     />
                     <InputField
                       label="Ref / Cheque No."
@@ -1003,29 +968,21 @@ function MouInputForm() {
                       placeholder="013385"
                     />
                     <InputField
-                      label="Date"
-                      type="date"
-                      name="chequeDate"
-                      value={financials.chequeDate}
-                      onChange={handleFinancialsChange}
-                      isLegalDate={true}
-                    />
-                    <InputField
                       label="Bank Name"
                       name="bankName"
                       value={financials.bankName}
                       onChange={handleFinancialsChange}
                       placeholder="IDBI Bank"
-                      className="md:col-span-3"
                     />
                   </div>
                 </div>
               )}
 
+              {/* 2. PART PAYMENTS */}
               {partPayments.length > 0 && (
                 <div className="p-4 bg-white border border-slate-200 shadow-sm rounded-none animate-fade-in">
                   <h3 className="text-xs font-bold text-[#0269ff] mb-4 uppercase tracking-wider">
-                    Part Payment(s) on Registration
+                    Part Payment(s)
                   </h3>
                   {partPayments.map((payment, index) => (
                     <div
@@ -1039,6 +996,18 @@ function MouInputForm() {
                       >
                         Remove
                       </button>
+
+                      <div className="mb-4">
+                        <SelectField
+                          label="Payment Timing"
+                          name="timing"
+                          value={payment.timing}
+                          onChange={(e) => handlePartPaymentChange(index, e)}
+                          options={timingOptions}
+                          className="w-full md:w-1/2"
+                        />
+                      </div>
+
                       <div className="grid md:grid-cols-2 gap-4 mb-4">
                         <InputField
                           label="Amount (Rs.)"
@@ -1055,13 +1024,21 @@ function MouInputForm() {
                           className="bg-white"
                         />
                       </div>
-                      <div className="grid md:grid-cols-3 gap-4 pt-4 border-t border-slate-200">
+                      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-slate-200">
                         <SelectField
                           label="Payment Mode"
                           name="mode"
                           value={payment.mode}
                           onChange={(e) => handlePartPaymentChange(index, e)}
                           options={paymentModeOptions}
+                        />
+                        <InputField
+                          label="Date"
+                          name="date"
+                          type="date"
+                          value={payment.date}
+                          onChange={(e) => handlePartPaymentChange(index, e)}
+                          isPaymentDate={true}
                         />
                         <InputField
                           label="Ref / Cheque No."
@@ -1088,19 +1065,22 @@ function MouInputForm() {
                 </div>
               )}
 
-              {showSaleDeed && (
+              {/* 3. FULL & FINAL */}
+              {showFullFinal && (
                 <div className="p-4 bg-white border border-slate-200 shadow-sm rounded-none relative animate-fade-in">
                   <button
                     type="button"
                     onClick={() => {
-                      setShowSaleDeed(false);
+                      setShowFullFinal(false);
                       setFinancials((prev) => ({
                         ...prev,
-                        saleDeedAmount: "",
-                        saleDeedAmountWords: "",
-                        saleDeedMode: "",
-                        saleDeedRefNo: "",
-                        saleDeedBank: "",
+                        fullFinalAmount: "",
+                        fullFinalAmountWords: "",
+                        fullFinalMode: "Cheque",
+                        fullFinalRefNo: "",
+                        fullFinalBank: "",
+                        fullFinalDate: "",
+                        fullFinalTiming: "After Execution",
                       }));
                     }}
                     className="absolute -top-2.5 right-2 text-red-500 text-[10px] font-bold uppercase bg-red-50 px-2 py-1 border border-red-100 hover:bg-red-100 transition"
@@ -1108,59 +1088,80 @@ function MouInputForm() {
                     Remove
                   </button>
                   <h3 className="text-xs font-bold text-[#0269ff] mb-4 uppercase tracking-wider">
-                    Final Payment on Sale Deed
+                    Full & Final Payment
                   </h3>
+
+                  <div className="mb-4">
+                    <SelectField
+                      label="Payment Timing"
+                      name="fullFinalTiming"
+                      value={financials.fullFinalTiming}
+                      onChange={handleFinancialsChange}
+                      options={timingOptions}
+                      className="w-full md:w-1/2"
+                    />
+                  </div>
+
                   <div className="grid md:grid-cols-2 gap-4 mb-4">
                     <InputField
                       label="Amount (Rs.)"
-                      name="saleDeedAmount"
+                      name="fullFinalAmount"
                       type="number"
-                      value={financials.saleDeedAmount}
+                      value={financials.fullFinalAmount}
                       onChange={handleFinancialsChange}
                       placeholder="5385000"
                     />
                     <InputField
                       label="Amount in Words"
-                      name="saleDeedAmountWords"
-                      value={financials.saleDeedAmountWords}
+                      name="fullFinalAmountWords"
+                      value={financials.fullFinalAmountWords}
                       onChange={handleFinancialsChange}
                       readOnly
                       className="bg-slate-50"
                     />
                   </div>
-                  <div className="grid md:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
+                  <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 pt-4 border-t border-slate-100">
                     <SelectField
                       label="Payment Mode"
-                      name="saleDeedMode"
-                      value={financials.saleDeedMode}
+                      name="fullFinalMode"
+                      value={financials.fullFinalMode}
                       onChange={handleFinancialsChange}
                       options={paymentModeOptions}
                     />
                     <InputField
+                      label="Date"
+                      type="date"
+                      name="fullFinalDate"
+                      value={financials.fullFinalDate}
+                      onChange={handleFinancialsChange}
+                      isPaymentDate={true}
+                    />
+                    <InputField
                       label="Ref / Cheque No."
-                      name="saleDeedRefNo"
-                      value={financials.saleDeedRefNo}
+                      name="fullFinalRefNo"
+                      value={financials.fullFinalRefNo}
                       onChange={handleFinancialsChange}
                     />
                     <InputField
                       label="Bank Name"
-                      name="saleDeedBank"
-                      value={financials.saleDeedBank}
+                      name="fullFinalBank"
+                      value={financials.fullFinalBank}
                       onChange={handleFinancialsChange}
                     />
                   </div>
                 </div>
               )}
 
+              {/* 4. CASH PAYMENTS */}
               {cashPayments.length > 0 && (
                 <div className="p-4 bg-white border border-slate-200 shadow-sm rounded-none animate-fade-in">
                   <h3 className="text-xs font-bold text-[#0269ff] mb-4 uppercase tracking-wider">
-                    Part Payment(s) (Cash)
+                    Cash Payment Schedule
                   </h3>
                   {cashPayments.map((payment, index) => (
                     <div
                       key={index}
-                      className="relative bg-slate-50 p-4 border border-slate-200 mb-4 grid md:grid-cols-2 gap-4"
+                      className="relative bg-slate-50 p-4 border border-slate-200 mb-4 grid md:grid-cols-2 lg:grid-cols-4 gap-4"
                     >
                       <button
                         type="button"
@@ -1169,6 +1170,14 @@ function MouInputForm() {
                       >
                         Remove
                       </button>
+
+                      <SelectField
+                        label="Payment Timing"
+                        name="timing"
+                        value={payment.timing}
+                        onChange={(e) => handleCashPaymentChange(index, e)}
+                        options={timingOptions}
+                      />
                       <InputField
                         label="Amount (Rs.)"
                         name="amount"
@@ -1183,6 +1192,14 @@ function MouInputForm() {
                         readOnly
                         className="bg-white"
                       />
+                      <InputField
+                        label="Payment Date"
+                        name="date"
+                        type="date"
+                        value={payment.date}
+                        onChange={(e) => handleCashPaymentChange(index, e)}
+                        isPaymentDate={true}
+                      />
                     </div>
                   ))}
                   <button
@@ -1195,6 +1212,7 @@ function MouInputForm() {
                 </div>
               )}
 
+              {/* 5. LOAN */}
               {showLoan && (
                 <div className="p-4 bg-white border border-slate-200 shadow-sm rounded-none relative animate-fade-in">
                   <button
@@ -1255,7 +1273,6 @@ function MouInputForm() {
                 Mortgage Status
               </h2>
             </div>
-
             <div className="p-4 md:p-5 bg-slate-50 border border-slate-200 rounded-none mb-6">
               <div className="flex gap-6 mb-4">
                 <label className="flex items-center gap-2 cursor-pointer group">
@@ -1292,7 +1309,6 @@ function MouInputForm() {
                   </span>
                 </label>
               </div>
-
               {mortgage.isMortgaged && (
                 <div className="grid md:grid-cols-2 gap-4 md:gap-5 bg-white p-4 border border-slate-200 animate-fade-in">
                   <SelectField
@@ -1349,7 +1365,6 @@ function MouInputForm() {
                 </button>
               )}
             </div>
-
             <div className="p-5 md:p-6 bg-white border border-slate-200 shadow-sm rounded-none">
               <InputField
                 label="Completion Deadline Date"
@@ -1357,9 +1372,8 @@ function MouInputForm() {
                 name="completionDeadline"
                 value={brokerage.completionDeadline}
                 onChange={(e) => handleObjectChange(e, brokerage, setBrokerage)}
-                isLegalDate={true}
+                isPaymentDate={true}
               />
-
               {showBrokerage && (
                 <div className="mt-6 pt-6 border-t border-slate-200 relative grid md:grid-cols-2 gap-4 animate-fade-in">
                   <button

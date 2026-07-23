@@ -34,57 +34,90 @@ const generateMouHTML = (data) => {
   // CONDITIONAL PAYMENT CLAUSES
   let paymentClausesHTML = "";
 
+  // 1. TOKEN AMOUNT
   if (data.financials?.tokenAmount) {
-    paymentClausesHTML += `
+    if (data.financials.tokenMode === "Cash") {
+      paymentClausesHTML += `
+      <li style="margin-bottom: 10px;">
+        A sum of <strong>Rs. ${data.financials.tokenAmount}/- (Rupees ${data.financials.tokenAmountWords})</strong> shall be 
+        paid by Cash as a token Amount.
+      </li>`;
+    } else {
+      paymentClausesHTML += `
       <li style="margin-bottom: 10px;">
         A sum of <strong>Rs. ${data.financials.tokenAmount}/- (Rupees ${data.financials.tokenAmountWords})</strong> shall be 
         paid by ${data.financials.tokenMode || "Cheque"} No. ${data.financials.chequeNo || "_______"}, Dated ${data.financials.formattedChequeDate || "_______"} Drawn on 
         ${data.financials.bankName || "_______"} as a token Amount.
       </li>`;
+    }
   }
 
+  // 2. PART PAYMENTS
   if (data.partPayments && data.partPayments.length > 0) {
     data.partPayments.forEach((p) => {
-      const modeStr = p.mode ? `by ${p.mode}` : "by Cheque/Rtgs";
-      const refStr = p.refNo ? ` No. ${p.refNo}` : "";
-      const bankStr = p.bank ? `, Drawn on ${p.bank}` : "";
+      const timingWord = p.timing === "After Execution" ? "after" : "before";
+      let paymentString = "";
+
+      if (p.mode === "Cash") {
+        paymentString = `paid by Cash on or ${timingWord} execution of part payment Registration.`;
+      } else {
+        const modeStr = p.mode ? `by ${p.mode}` : "by Cheque/Rtgs";
+        const refStr = p.refNo ? ` No. ${p.refNo}` : "";
+        const bankStr = p.bank ? `, Drawn on ${p.bank}` : "";
+        paymentString = `paid ${modeStr}${refStr}${bankStr} on or ${timingWord} execution of part payment Registration.`;
+      }
 
       paymentClausesHTML += `
         <li style="margin-bottom: 10px;">
           A sum of <strong>Rs. ${p.amount}/- (Rupees ${p.amountWords})</strong> shall be 
-          paid ${modeStr}${refStr}${bankStr} on or before execution of part payment Registration.
+          ${paymentString}
         </li>`;
     });
   }
 
-  if (data.financials?.saleDeedAmount) {
-    const modeStr = data.financials.saleDeedMode
-      ? `by ${data.financials.saleDeedMode}`
-      : "by Cheque/Rtgs";
-    const refStr = data.financials.saleDeedRefNo
-      ? ` No. ${data.financials.saleDeedRefNo}`
-      : "";
-    const bankStr = data.financials.saleDeedBank
-      ? `, Drawn on ${data.financials.saleDeedBank}`
-      : "";
+  // 3. FULL & FINAL PAYMENT
+  if (data.financials?.fullFinalAmount) {
+    const timingWord =
+      data.financials.fullFinalTiming === "After Execution"
+        ? "after"
+        : "before";
+    let paymentString = "";
+
+    if (data.financials.fullFinalMode === "Cash") {
+      paymentString = `paid by Cash on or ${timingWord} execution of Full and Final payment Registration.`;
+    } else {
+      const modeStr = data.financials.fullFinalMode
+        ? `by ${data.financials.fullFinalMode}`
+        : "by Cheque/Rtgs";
+      const refStr = data.financials.fullFinalRefNo
+        ? ` No. ${data.financials.fullFinalRefNo}`
+        : "";
+      const bankStr = data.financials.fullFinalBank
+        ? `, Drawn on ${data.financials.fullFinalBank}`
+        : "";
+      paymentString = `paid ${modeStr}${refStr}${bankStr} on or ${timingWord} execution of Full and Final payment Registration.`;
+    }
 
     paymentClausesHTML += `
       <li style="margin-bottom: 10px;">
-        A sum of <strong>Rs. ${data.financials.saleDeedAmount}/- (Rupees ${data.financials.saleDeedAmountWords})</strong> shall be 
-        paid ${modeStr}${refStr}${bankStr} on or before execution of Sale Deed (Full and Final payment) Registration.
+        A sum of <strong>Rs. ${data.financials.fullFinalAmount}/- (Rupees ${data.financials.fullFinalAmountWords})</strong> shall be 
+        ${paymentString}
       </li>`;
   }
 
+  // 4. CASH PAYMENTS
   if (data.cashPayments && data.cashPayments.length > 0) {
     data.cashPayments.forEach((c) => {
+      const timingWord = c.timing === "After Execution" ? "after" : "before";
       paymentClausesHTML += `
         <li style="margin-bottom: 10px;">
           A sum of <strong>Rs. ${c.amount}/- (Rupees ${c.amountWords})</strong> shall be 
-          paid by Cash, on or before execution of part payment Registration.
+          paid by Cash, on or ${timingWord} execution of part payment Registration.
         </li>`;
     });
   }
 
+  // 5. LOAN
   if (data.financials?.loanBalanceAmount) {
     paymentClausesHTML += `
       <li style="margin-bottom: 10px;">
@@ -94,6 +127,7 @@ const generateMouHTML = (data) => {
       </li>`;
   }
 
+  // 6. TDS
   if (data.financials?.tdsAmount) {
     paymentClausesHTML += `
       <li style="margin-bottom: 10px;">
@@ -146,20 +180,42 @@ const generateMouHTML = (data) => {
     }
   }
 
-  let sellersSigs =
+  // Generate Sellers Signature Block
+  let sellersSigsHTML = "";
+  if (data.sellers && data.sellers.length > 0) {
+    data.sellers.forEach((s, i) => {
+      const title = s.title ? s.title.toUpperCase() : "";
+      const name = s.fullName ? s.fullName.toUpperCase() : "";
+      sellersSigsHTML += `<p style="font-weight: bold; margin-bottom: 10px;">${i + 1})${title} ${name}</p>`;
+      if (i < data.sellers.length - 1) {
+        sellersSigsHTML += `<p style="font-weight: bold; margin-bottom: 10px;">And</p>`;
+      }
+    });
+  }
+
+  // Generate Purchasers Signature Block
+  let purchasersSigsHTML = "";
+  if (data.purchasers && data.purchasers.length > 0) {
+    data.purchasers.forEach((p, i) => {
+      const title = p.title ? p.title.toUpperCase() : "";
+      const name = p.fullName ? p.fullName.toUpperCase() : "";
+      const comma = i < data.purchasers.length - 1 ? "," : "";
+      purchasersSigsHTML += `<p style="font-weight: bold; margin-bottom: 10px;">${i + 1})${title} ${name}${comma}</p>`;
+      if (i < data.purchasers.length - 1) {
+        purchasersSigsHTML += `<p style="margin-bottom: 10px;">&</p>`;
+      }
+    });
+  }
+
+  // Generate receipt specific signature lines (with physical lines)
+  let receiptSellersSigs =
     data.sellers
       ?.map(
         (s, i) =>
           `<p style="margin-bottom: 25px;">________________________________<br/>${i + 1}) ${s.title} ${s.fullName}</p>`,
       )
       .join("") || "";
-  let purchasersSigs =
-    data.purchasers
-      ?.map(
-        (p, i) =>
-          `<p style="margin-bottom: 25px;">________________________________<br/>${i + 1}) ${p.title} ${p.fullName}</p>`,
-      )
-      .join("") || "";
+
   let purchasersList =
     data.purchasers
       ?.map(
@@ -169,6 +225,13 @@ const generateMouHTML = (data) => {
       .join("") || "";
 
   // CONDITIONAL RECEIPT PAGE (Only shows if Token Amount exists)
+  let receiptPaymentDetails = "";
+  if (data.financials?.tokenMode === "Cash") {
+    receiptPaymentDetails = "paid by Cash as a token Amount";
+  } else {
+    receiptPaymentDetails = `paid by ${data.financials?.tokenMode || "Cheque"} No. ${data.financials?.chequeNo || "_______"}, Dated ${data.financials?.formattedChequeDate || "_______"} Drawn on ${data.financials?.bankName || "_______"} as a token Amount`;
+  }
+
   const receiptHTML = data.financials?.tokenAmount
     ? `
     <div style="page-break-before: always;"></div>
@@ -176,8 +239,7 @@ const generateMouHTML = (data) => {
     
     <p style="margin-bottom: 40px;">
       RECEIVED WITH thanks a sum of <strong>Rs. ${data.financials.tokenAmount}/- (Rupees ${data.financials.tokenAmountWords})</strong> 
-      paid by ${data.financials.tokenMode || "Cheque"} No. ${data.financials.chequeNo}, Dated ${data.financials.formattedChequeDate} Drawn on ${data.financials.bankName} 
-      as a token Amount., being towards the Part Payment for sale of Flat No. <strong>${data.property?.flatNo}</strong>, in the society known as 
+      ${receiptPaymentDetails}, being towards the Part Payment for sale of Flat No. <strong>${data.property?.flatNo}</strong>, in the society known as 
       <strong> '${data.property?.societyName}'</strong> situated at <strong>${data.property?.fullAddress}</strong>, 
       (hereinafter referred the "Said Flat") from the within named ${purchaserTitle}:
     </p>
@@ -195,7 +257,7 @@ const generateMouHTML = (data) => {
       <tr>
         <td style="width: 50%; border: none;"></td>
         <td style="width: 50%; text-align: right; border: none;">
-          ${sellersSigs}
+          ${receiptSellersSigs}
           <p style="font-weight: bold;">(The ${sellerTitle})</p>
         </td>
       </tr>
@@ -210,12 +272,12 @@ const generateMouHTML = (data) => {
     : "";
 
   return `
-    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.6; text-align: justify;">
+    <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.5; text-align: justify;">
       <h1 style="text-align: center; text-decoration: underline; font-size: 16pt; font-weight: bold; margin-bottom: 10px;">
         MEMORANDUM OF UNDERSTANDING
       </h1>
       <div style="text-align: center; font-weight: bold; margin-bottom: 30px;">
-        ====================================
+        
       </div>
 
       <p style="margin-bottom: 20px;">
@@ -258,7 +320,7 @@ const generateMouHTML = (data) => {
         and conditions mutually agreed to between them and mentioned herein below:
       </p>
 
-      <p style="margin-bottom: 15px;"><strong>AND WHEREAS : -</strong><br/>===========</p>
+      <p style="margin-bottom: 15px;"><strong>AND WHEREAS : -</strong></p>
       <p style="margin-bottom: 15px;">
         The ${purchaserTitle} being in need of a residential purpose requested the ${sellerTitle}, 
         to transfer all the rights, title and interest in respect of the said Flat and ${sellerTitle} 
@@ -327,6 +389,8 @@ const generateMouHTML = (data) => {
           </ol>
         </li>
 
+        ${mortgageHTML}
+
         <li style="margin-bottom: 15px;">
           The ${sellerTitle} SHALL SIGN THE FINAL Sale Deed and get it registered along with the ${purchaserTitle} 
           at the time of full and final payment of consideration towards the Flat.
@@ -361,23 +425,22 @@ const generateMouHTML = (data) => {
         IN WITNESS WHEREOF, the parties hereto have hereunto set and subscribed their respective hands on the day and the year hereinabove written.
       </p>
 
-      <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; border: none;">
-        <tr>
-          <td style="width: 50%; vertical-align: top; border: none; padding: 0;">
-            <p style="font-weight: bold; margin-bottom: 40px;">SIGNED AND SEALED AND DELIVERED BY THE<br/>Withinnamed ${sellerTitle}</p>
-            ${sellersSigs}
-          </td>
-          <td style="width: 50%; vertical-align: top; border: none; padding: 0;">
-            <p style="font-weight: bold; margin-bottom: 40px;">SIGNED AND DELIVERED BY THE<br/>withinnamed ${purchaserTitle}</p>
-            ${purchasersSigs}
-          </td>
-        </tr>
-      </table>
+      <div style="margin-bottom: 40px;">
+        <p style="margin-bottom: 10px;">SIGNED AND SEALED AND DELIVERED BY THE</p>
+        <p style="margin-bottom: 10px;">Withinnamed <strong>${sellerTitle}</strong></p>
+        ${sellersSigsHTML}
+        <p style="margin-bottom: 10px;">in the presence of ...........</p>
+        <p style="margin-bottom: 30px;">1.</p>
+        <p style="margin-bottom: 30px;">2.</p>
+      </div>
 
       <div style="margin-bottom: 40px;">
-        <p style="font-weight: bold; margin-bottom: 25px;">In the presence of Witnesses :</p>
-        <p style="margin-bottom: 30px;">1. ________________________________</p>
-        <p>2. ________________________________</p>
+        <p style="margin-bottom: 10px;">SIGNED AND DELIVERED BY THE</p>
+        <p style="margin-bottom: 10px;">withinnamed <strong>${purchaserTitle}</strong></p>
+        ${purchasersSigsHTML}
+        <p style="margin-bottom: 10px;">In the presence of</p>
+        <p style="margin-bottom: 30px;">1.</p>
+        <p style="margin-bottom: 30px;">2.</p>
       </div>
 
       ${receiptHTML}
@@ -599,7 +662,7 @@ function MouTemplate() {
                     body { 
                       font-family: 'Times New Roman', Times, serif; 
                       font-size: 12pt; 
-                      line-height: 1.6;
+                      line-height: 1.5;
                       padding: 48px; 
                       color: #000;
                       background: #fff;
